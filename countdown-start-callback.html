@@ -1,0 +1,33 @@
+<html>
+	<head>
+		<link rel="stylesheet" href="flipclock.css">
+
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+		<script src="flipclock.js"></script>		
+	</head>
+	<body style="width: 100%; text-align: center">
+	<div class="clock" style="margin:0 auto; width: 50%; margin-top: 200px"></div>
+	<div class="message"></div>
+
+	<script type="text/javascript">
+		var clock;
+		
+		$(document).ready(function() {
+			
+			clock = $('.clock').FlipClock(120, {
+		        clockFace: 'MinuteCounter',
+		        countdown: true,
+		        autoStart: true,
+		        callbacks: {
+		        	start: function() {
+		        	}
+		        }
+		    });
+            
+            $(".flip-clock-label").html("");
+		});
+	</script>
+	
+	</body>
+</html>
