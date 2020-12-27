@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+
+    <title>Geoguessr tournament</title>
+    <meta name="description" content="Geoguessr tournament" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+      integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+      crossorigin=""
+    />
+    <style>
+      #mapid {
+        height: 640px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <script
+      src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+      integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+      crossorigin=""
+    ></script>
+
+    <div id="mapid"></div>
+
+    <script>
+      const createIcon = (iconColor) =>
+        new L.Icon({
+          iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-${iconColor}.png`,
+          shadowUrl:
+            "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
+          iconSize: [11, 20],
+          iconAnchor: [6, 20],
+          popupAnchor: [1, -18],
+          shadowSize: [0, 0],
+        });
+      const icons = ["gold", "grey", "orange", "blue"].map(createIcon);
+      var map = L.map("mapid").setView([51.505, -0.09], 2);
+      L.tileLayer(
+        "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}",
+        {
+          attribution:
+            'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+          maxZoom: 18,
+          id: "mapbox/streets-v11",
+          tileSize: 512,
+          zoomOffset: -1,
+          accessToken:
+            "pk.eyJ1Ijoic2xhc2hwIiwiYSI6ImNrajc2ejVuMzZna2QydnFqNjg2eGx0cDcifQ.0YrOWeCFuS0URH6E1t3qJg",
+        }
+      ).addTo(map);
+      const answer = { lat: 11.91446215986108, lng: 99.73367038515676 };
+      let guesses = [
+        {
+          lat: 16.553965080246112,
+          lng: 101.19369173979814,
+          playerName: "Radu C",
+          roundScoreInPoints: 3738,
+        },
+        {
+          lat: 13.765716393216037,
+          lng: 99.51653960544587,
+          playerName: "Kuahs𝙞 ",
+          roundScoreInPoints: 4471,
+        },
+        {
+          lat: 16.19265131471199,
+          lng: 100.0191516994089,
+          playerName: "Altingwouk",
+          roundScoreInPoints: 3866,
+        },
+        {
+          lat: 13.57241839599645,
+          lng: 99.69176331725158,
+          playerName: "The MAYO of Воркута́",
+          roundScoreInPoints: 4526,
+        },
+        {
+          lat: 13.469932432072502,
+          lng: 101.36271088918852,
+          playerName: "Topotic ",
+          roundScoreInPoints: 4376,
+        },
+        {
+          lat: 15.15765016836763,
+          lng: 99.95574382728367,
+          playerName: "AL Johns - Indianapolis",
+          roundScoreInPoints: 4114,
+        },
+        {
+          lat: 13.496567385759109,
+          lng: 99.81072241256982,
+          playerName: "Toris B",
+          roundScoreInPoints: 4547,
+        },
+        {
+          lat: 13.292556482133953,
+          lng: 99.7491323338304,
+          playerName: "Kurt",
+          roundScoreInPoints: 4603,
+        },
+        {
+          lat: 15.922336427734647,
+          lng: 101.24222499258015,
+          playerName: "Canadian Pole Expert ",
+          roundScoreInPoints: 3871,
+        },
+        {
+          lat: 12.516597453247604,
+          lng: 99.86993208348889,
+          playerName: "Apple",
+          roundScoreInPoints: 4818,
+        },
+        {
+          lat: 10.956431648234844,
+          lng: 99.37313019427052,
+          playerName: "  𝕤𝕠𝕦𝕥𝕙𝕓𝕪𝕖𝟛𝟘𝟘𝟘",
+          roundScoreInPoints: 4703,
+        },
+        {
+          lat: 15.740916922197666,
+          lng: 101.01523903867451,
+          playerName: "- ℙ𝕠𝕝𝕚𝕥𝕚𝕩 -",
+          roundScoreInPoints: 3928,
+        },
+        {
+          lat: 12.677471426851037,
+          lng: 99.92903626758459,
+          playerName: "Sverre",
+          roundScoreInPoints: 4770,
+        },
+        {
+          lat: 5.927298607004996,
+          lng: 100.89415246963438,
+          playerName: "Calzone",
+          roundScoreInPoints: 3469,
+        },
+        {
+          lat: 14.089824231211383,
+          lng: 101.04801127939828,
+          playerName: "Wester Wobbes",
+          roundScoreInPoints: 4297,
+        },
+        {
+          lat: 13.643969902247411,
+          lng: 99.883232414404,
+          playerName: "SUNKEN IS PRETTY",
+          roundScoreInPoints: 4506,
+        },
+        {
+          lat: 15.303384424322418,
+          lng: 101.12989907873886,
+          playerName: "Luxlad ",
+          roundScoreInPoints: 4017,
+        },
+        {
+          lat: 13.763248478979298,
+          lng: 99.90436253568697,
+          playerName: "Karl MarXmas",
+          roundScoreInPoints: 4473,
+        },
+        {
+          lat: 13.906577460938378,
+          lng: 99.79596224373442,
+          playerName: "HugoAlvara2",
+          roundScoreInPoints: 4437,
+        },
+        {
+          lat: 8.966263438812296,
+          lng: 99.28469994551998,
+          playerName: ":P",
+          roundScoreInPoints: 4181,
+        },
+        {
+          lat: 17.104108483355283,
+          lng: 102.40411428550453,
+          playerName: "Geomane10K",
+          roundScoreInPoints: 3531,
+        },
+        {
+          lat: 3.1643640321456483,
+          lng: 102.90288754485472,
+          playerName: "The Queen of the UK",
+          roundScoreInPoints: 2863,
+        },
+        {
+          lat: 14.003530810959202,
+          lng: 99.72790161606781,
+          playerName: "sunkencity64",
+          roundScoreInPoints: 4411,
+        },
+        {
+          lat: 16.9335181634177,
+          lng: 100.19762116910009,
+          playerName: "Giovanni1798p",
+          roundScoreInPoints: 3696,
+        },
+        {
+          lat: 9.459471180096573,
+          lng: 99.04142663927627,
+          playerName: "Nightey",
+          roundScoreInPoints: 4291,
+        },
+        {
+          lat: 4.8063970859117395,
+          lng: 102.7675357752222,
+          playerName: "AxelBaxel",
+          roundScoreInPoints: 3147,
+        },
+        {
+          lat: -7.200048557824455,
+          lng: 108.4231988803084,
+          playerName: "morqk",
+          roundScoreInPoints: 1420,
+        },
+        {
+          lat: 22.51191317377807,
+          lng: 92.06842816628894,
+          playerName: "busstop",
+          roundScoreInPoints: 2310,
+        },
+        {
+          lat: 8.693913190254937,
+          lng: 99.87332067175987,
+          playerName: "slashP",
+          roundScoreInPoints: 4121,
+        },
+        {
+          lat: 14.918290447277252,
+          lng: 104.74354057209393,
+          playerName: "Damianos_Gz",
+          roundScoreInPoints: 3547,
+        },
+        {
+          lat: -16.884532709978213,
+          lng: -63.99872818306802,
+          playerName: "Per-Kristian Helland",
+          roundScoreInPoints: 0,
+        },
+      ];
+      guesses.sort((a, b) => b.roundScoreInPoints - a.roundScoreInPoints);
+      guesses.forEach((guess, index) =>
+        L.marker([guess.lat, guess.lng], {
+          zIndexOffset: guesses.length - index,
+          icon: icons.slice(index)[0] || [...icons].pop(),
+        })
+          .bindPopup(
+            `<b>${guess.playerName}</b><br>${guess.roundScoreInPoints}`
+          )
+          .addTo(map)
+      );
+      L.marker([answer.lat, answer.lng], {
+        zIndexOffset: guesses.length + 100,
+        icon: createIcon("green"),
+      })
+        .bindPopup("<b>Actual location</b>")
+        .addTo(map);
+    </script>
+  </body>
+</html>
