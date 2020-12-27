@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+
+    <title>Geoguessr tournament</title>
+    <meta name="description" content="Geoguessr tournament" />
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+        integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+        crossorigin=""
+    />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <style>
+      #mapid {
+        height: 640px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <script
+      src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+      integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+      crossorigin=""
+    ></script>
+
+    <div id="mapid"></div>
+
+    <script>
+      const createIcon = (iconColor) =>
+        new L.Icon({
+          iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-${iconColor}.png`,
+          shadowUrl:
+            "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
+          iconSize: [11, 20],
+          iconAnchor: [6, 20],
+          popupAnchor: [1, -34],
+          shadowSize: [0, 0],
+        });
+      const icons = ["gold", "grey", "orange", "blue"].map(createIcon);
+      var map = L.map("mapid").setView([51.505, -0.09], 2);
+      L.tileLayer(
+        "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}",
+        {
+          attribution:
+            'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+          maxZoom: 18,
+          id: "mapbox/streets-v11",
+          tileSize: 512,
+          zoomOffset: -1,
+          accessToken:
+            "pk.eyJ1Ijoic2xhc2hwIiwiYSI6ImNrajc2ejVuMzZna2QydnFqNjg2eGx0cDcifQ.0YrOWeCFuS0URH6E1t3qJg",
+        }
+      ).addTo(map);
+      const answer = {"lat":41.13573761681224,"lng":-86.89129669492446};
+      let guesses = [{"playerName":"Nightey","roundScoreInPoints":4807,"lat":40.50505190677522,"lng":-86.64981249124074},{"playerName":"Radu C","roundScoreInPoints":4903,"lat":41.39463924038031,"lng":-86.63013323065337},{"playerName":"- \u2119\uD835\uDD60\uD835\uDD5D\uD835\uDD5A\uD835\uDD65\uD835\uDD5A\uD835\uDD69 -","roundScoreInPoints":4566,"lat":39.7455885198318,"lng":-86.1034163699486},{"playerName":"Topotic ","roundScoreInPoints":4926,"lat":40.88638641297911,"lng":-86.8839071693651},{"playerName":"AL Johns - Indianapolis","roundScoreInPoints":4363,"lat":39.20485261677709,"lng":-85.32695814577501},{"playerName":"Giovanni1798p","roundScoreInPoints":4752,"lat":40.377761218968196,"lng":-86.38775952154157},{"playerName":"Toris B","roundScoreInPoints":4744,"lat":41.07821311014167,"lng":-85.7331561528469},{"playerName":"Calzone","roundScoreInPoints":4867,"lat":40.709025425696225,"lng":-86.70822358496123},{"playerName":"Sverre","roundScoreInPoints":4774,"lat":40.39965179465963,"lng":-86.59051160850015},{"playerName":"slashP","roundScoreInPoints":4742,"lat":40.29569160944608,"lng":-86.53671275879611},{"playerName":"Altingwouk","roundScoreInPoints":4385,"lat":39.275052878785985,"lng":-85.38862384685461},{"playerName":"The Queen of the UK","roundScoreInPoints":4710,"lat":40.219803667887554,"lng":-86.37261695759037},{"playerName":"Kurt","roundScoreInPoints":5000,"lat":41.135952974672946,"lng":-86.89149516419525},{"playerName":"morqk","roundScoreInPoints":4615,"lat":40.77596632672633,"lng":-85.18881995603249},{"playerName":"Kuahs\uD835\uDE5E ","roundScoreInPoints":4718,"lat":40.247845065311516,"lng":-86.38220517950778},{"playerName":"AxelBaxel","roundScoreInPoints":4872,"lat":40.716342600008055,"lng":-86.75614428787173},{"playerName":"Wilsonia","roundScoreInPoints":4530,"lat":39.50062647060405,"lng":-86.65669309579505},{"playerName":":P","roundScoreInPoints":4284,"lat":38.83496681262253,"lng":-85.38250028454897},{"playerName":"HugoAlvara2","roundScoreInPoints":4629,"lat":40.15068536124687,"lng":-85.80554711079625},{"playerName":"sunkencity64","roundScoreInPoints":4646,"lat":40.13091435846566,"lng":-85.96971308254479},{"playerName":"  \uD835\uDD64\uD835\uDD60\uD835\uDD66\uD835\uDD65\uD835\uDD59\uD835\uDD53\uD835\uDD6A\uD835\uDD56\uD835\uDFDB\uD835\uDFD8\uD835\uDFD8\uD835\uDFD8","roundScoreInPoints":4864,"lat":40.68784564888503,"lng":-86.74688549689398},{"playerName":"Apple","roundScoreInPoints":4353,"lat":39.17013932246885,"lng":-85.30607357940676},{"playerName":"The MAYO of \u0412\u043E\u0440\u043A\u0443\u0442\u0430\u0301","roundScoreInPoints":4950,"lat":41.30265228455538,"lng":-86.89130108808212},{"playerName":"Wester Wobbes","roundScoreInPoints":4315,"lat":39.00755299094192,"lng":-85.29137209468331},{"playerName":"\uD83C\uDD76\uD83C\uDD81\uD83C\uDD7E\uD83C\uDD86\uD83C\uDD7B","roundScoreInPoints":4768,"lat":40.380495682490604,"lng":-86.5819207607704},{"playerName":"Dcfmyr","roundScoreInPoints":4417,"lat":39.83325330332752,"lng":-84.78254990820568},{"playerName":"Luxlad ","roundScoreInPoints":3509,"lat":38.23897970854349,"lng":-93.57887046436832},{"playerName":"Geomane10K","roundScoreInPoints":2902,"lat":39.3594792086868,"lng":-98.55207229029463},{"playerName":"busstop","roundScoreInPoints":2684,"lat":31.036071178855405,"lng":-89.80531628783326},{"playerName":"Per-Kristian Helland","roundScoreInPoints":45,"lat":-33.35445906129493,"lng":-113.21747818306802},{"playerName":"Intense","roundScoreInPoints":3,"lat":-78.6458133575462,"lng":-33.96243037818242}];
+      guesses.sort((a, b) => b.roundScoreInPoints - a.roundScoreInPoints);
+      guesses.forEach((guess, index) =>
+        L.marker([guess.lat, guess.lng], {
+          zIndexOffset: guesses.length - index,
+          icon: icons.slice(index)[0] || [...icons].pop(),
+        })
+          .bindPopup(
+            `<b>${guess.playerName}</b><br>${guess.roundScoreInPoints}`
+          )
+          .addTo(map)
+      );
+      L.marker([answer.lat, answer.lng], {
+        zIndexOffset: guesses.length + 100,
+        icon: createIcon("green"),
+      })
+        .bindPopup("<b>Actual location</b>")
+        .addTo(map);
+    </script>
+  </body>
+</html>
