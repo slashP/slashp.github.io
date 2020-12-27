@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+
+    <title>Geoguessr tournament</title>
+    <meta name="description" content="Geoguessr tournament" />
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+        integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+        crossorigin=""
+    />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <style>
+      #mapid {
+        height: 640px;
+      }
+    </style>
+  </head>
+
+  <body>
+      <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+              integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+              crossorigin=""></script>
+
+  <div>
+      <table class="table">
+          <tr>
+              <th>Player</th>
+              <th>Points</th>
+              <th>Eliminated in game</th>
+              <th>R1</th>
+              <th>R2</th>
+              <th>R3</th>
+              <th>R4</th>
+              <th>R5</th>
+          </tr>
+          <tr>
+              <td>Nightey</td>
+              <td class="text-right">23702</td>
+              <td class="text-right"></td>
+              <td class="text-right">4653</td>
+              <td class="text-right">4958</td>
+              <td class="text-right">4807</td>
+              <td class="text-right">4765</td>
+              <td class="text-right">4519</td>
+          </tr>
+          <tr>
+              <td>Radu C</td>
+              <td class="text-right">23317</td>
+              <td class="text-right"></td>
+              <td class="text-right">3635</td>
+              <td class="text-right">4992</td>
+              <td class="text-right">4903</td>
+              <td class="text-right">4921</td>
+              <td class="text-right">4866</td>
+          </tr>
+          <tr>
+              <td>- P -</td>
+              <td class="text-right">22761</td>
+              <td class="text-right"></td>
+              <td class="text-right">3826</td>
+              <td class="text-right">4837</td>
+              <td class="text-right">4566</td>
+              <td class="text-right">4660</td>
+              <td class="text-right">4872</td>
+          </tr>
+          <tr>
+              <td>Topotic </td>
+              <td class="text-right">22089</td>
+              <td class="text-right"></td>
+              <td class="text-right">3428</td>
+              <td class="text-right">4383</td>
+              <td class="text-right">4926</td>
+              <td class="text-right">4626</td>
+              <td class="text-right">4726</td>
+          </tr>
+          <tr>
+              <td>AL Johns - Indianapolis</td>
+              <td class="text-right">21744</td>
+              <td class="text-right"></td>
+              <td class="text-right">4350</td>
+              <td class="text-right">3915</td>
+              <td class="text-right">4363</td>
+              <td class="text-right">4949</td>
+              <td class="text-right">4167</td>
+          </tr>
+          <tr>
+              <td>Giovanni1798p</td>
+              <td class="text-right">21006</td>
+              <td class="text-right"></td>
+              <td class="text-right">4928</td>
+              <td class="text-right">4965</td>
+              <td class="text-right">4752</td>
+              <td class="text-right">4393</td>
+              <td class="text-right">1968</td>
+          </tr>
+          <tr>
+              <td>Toris B</td>
+              <td class="text-right">20990</td>
+              <td class="text-right"></td>
+              <td class="text-right">4718</td>
+              <td class="text-right">4831</td>
+              <td class="text-right">4744</td>
+              <td class="text-right">4063</td>
+              <td class="text-right">2634</td>
+          </tr>
+          <tr>
+              <td>Calzone</td>
+              <td class="text-right">20884</td>
+              <td class="text-right"></td>
+              <td class="text-right">4631</td>
+              <td class="text-right">4058</td>
+              <td class="text-right">4867</td>
+              <td class="text-right">4042</td>
+              <td class="text-right">3286</td>
+          </tr>
+          <tr>
+              <td>Sverre</td>
+              <td class="text-right">20617</td>
+              <td class="text-right"></td>
+              <td class="text-right">3877</td>
+              <td class="text-right">4909</td>
+              <td class="text-right">4774</td>
+              <td class="text-right">4754</td>
+              <td class="text-right">2303</td>
+          </tr>
+          <tr>
+              <td>slashP</td>
+              <td class="text-right">20274</td>
+              <td class="text-right"></td>
+              <td class="text-right">4429</td>
+              <td class="text-right">4052</td>
+              <td class="text-right">4742</td>
+              <td class="text-right">4042</td>
+              <td class="text-right">3009</td>
+          </tr>
+          <tr>
+              <td>Altingwouk</td>
+              <td class="text-right">19976</td>
+              <td class="text-right"></td>
+              <td class="text-right">4541</td>
+              <td class="text-right">4814</td>
+              <td class="text-right">4385</td>
+              <td class="text-right">3847</td>
+              <td class="text-right">2389</td>
+          </tr>
+          <tr>
+              <td>The Queen of the UK</td>
+              <td class="text-right">19641</td>
+              <td class="text-right"></td>
+              <td class="text-right">4559</td>
+              <td class="text-right">3980</td>
+              <td class="text-right">4710</td>
+              <td class="text-right">4067</td>
+              <td class="text-right">2325</td>
+          </tr>
+          <tr>
+              <td>Kurt</td>
+              <td class="text-right">19584</td>
+              <td class="text-right"></td>
+              <td class="text-right">1095</td>
+              <td class="text-right">4063</td>
+              <td class="text-right">5000</td>
+              <td class="text-right">4751</td>
+              <td class="text-right">4675</td>
+          </tr>
+          <tr>
+              <td>morqk</td>
+              <td class="text-right">19495</td>
+              <td class="text-right"></td>
+              <td class="text-right">4407</td>
+              <td class="text-right">3761</td>
+              <td class="text-right">4615</td>
+              <td class="text-right">4552</td>
+              <td class="text-right">2160</td>
+          </tr>
+          <tr>
+              <td>Kuahs </td>
+              <td class="text-right">19326</td>
+              <td class="text-right"></td>
+              <td class="text-right">4055</td>
+              <td class="text-right">4220</td>
+              <td class="text-right">4718</td>
+              <td class="text-right">4005</td>
+              <td class="text-right">2328</td>
+          </tr>
+          <tr>
+              <td>AxelBaxel</td>
+              <td class="text-right">19130</td>
+              <td class="text-right"></td>
+              <td class="text-right">3853</td>
+              <td class="text-right">4161</td>
+              <td class="text-right">4872</td>
+              <td class="text-right">4663</td>
+              <td class="text-right">1581</td>
+          </tr>
+          <tr>
+              <td>Wilsonia</td>
+              <td class="text-right">18997</td>
+              <td class="text-right"></td>
+              <td class="text-right">3535</td>
+              <td class="text-right">3951</td>
+              <td class="text-right">4530</td>
+              <td class="text-right">4352</td>
+              <td class="text-right">2629</td>
+          </tr>
+          <tr>
+              <td>:P</td>
+              <td class="text-right">18705</td>
+              <td class="text-right"></td>
+              <td class="text-right">4837</td>
+              <td class="text-right">4950</td>
+              <td class="text-right">4284</td>
+              <td class="text-right">4115</td>
+              <td class="text-right">519</td>
+          </tr>
+          <tr>
+              <td>HugoAlvara2</td>
+              <td class="text-right">18520</td>
+              <td class="text-right"></td>
+              <td class="text-right">4820</td>
+              <td class="text-right">4936</td>
+              <td class="text-right">4629</td>
+              <td class="text-right">4063</td>
+              <td class="text-right">72</td>
+          </tr>
+          <tr>
+              <td>sunkencity64</td>
+              <td class="text-right">18504</td>
+              <td class="text-right"></td>
+              <td class="text-right">4796</td>
+              <td class="text-right">4339</td>
+              <td class="text-right">4646</td>
+              <td class="text-right">4118</td>
+              <td class="text-right">605</td>
+          </tr>
+          <tr>
+              <td>  </td>
+              <td class="text-right">18269</td>
+              <td class="text-right"></td>
+              <td class="text-right">3771</td>
+              <td class="text-right">4956</td>
+              <td class="text-right">4864</td>
+              <td class="text-right">4053</td>
+              <td class="text-right">625</td>
+          </tr>
+          <tr>
+              <td>Apple</td>
+              <td class="text-right">18138</td>
+              <td class="text-right"></td>
+              <td class="text-right">4459</td>
+              <td class="text-right">4178</td>
+              <td class="text-right">4353</td>
+              <td class="text-right">4512</td>
+              <td class="text-right">636</td>
+          </tr>
+          <tr>
+              <td>The MAYO of Vorkuta</td>
+              <td class="text-right">18035</td>
+              <td class="text-right"></td>
+              <td class="text-right">4077</td>
+              <td class="text-right">4202</td>
+              <td class="text-right">4950</td>
+              <td class="text-right">4120</td>
+              <td class="text-right">686</td>
+          </tr>
+          <tr>
+              <td>Wester Wobbes</td>
+              <td class="text-right">17164</td>
+              <td class="text-right"></td>
+              <td class="text-right">4746</td>
+              <td class="text-right">4220</td>
+              <td class="text-right">4315</td>
+              <td class="text-right">3862</td>
+              <td class="text-right">21</td>
+          </tr>
+          <tr>
+              <td></td>
+              <td class="text-right">16639</td>
+              <td class="text-right"></td>
+              <td class="text-right">3021</td>
+              <td class="text-right">4959</td>
+              <td class="text-right">4768</td>
+              <td class="text-right">3889</td>
+              <td class="text-right">2</td>
+          </tr>
+          <tr>
+              <td>Dcfmyr</td>
+              <td class="text-right">15440</td>
+              <td class="text-right"></td>
+              <td class="text-right">4399</td>
+              <td class="text-right">2595</td>
+              <td class="text-right">4417</td>
+              <td class="text-right">4026</td>
+              <td class="text-right">3</td>
+          </tr>
+          <tr>
+              <td>Luxlad </td>
+              <td class="text-right">15280</td>
+              <td class="text-right"></td>
+              <td class="text-right">3509</td>
+              <td class="text-right">4177</td>
+              <td class="text-right">3509</td>
+              <td class="text-right">4031</td>
+              <td class="text-right">54</td>
+          </tr>
+          <tr>
+              <td>Geomane10K</td>
+              <td class="text-right">14114</td>
+              <td class="text-right"></td>
+              <td class="text-right">1266</td>
+              <td class="text-right">4038</td>
+              <td class="text-right">2902</td>
+              <td class="text-right">4069</td>
+              <td class="text-right">1839</td>
+          </tr>
+          <tr>
+              <td>busstop</td>
+              <td class="text-right">13646</td>
+              <td class="text-right"></td>
+              <td class="text-right">4318</td>
+              <td class="text-right">2695</td>
+              <td class="text-right">2684</td>
+              <td class="text-right">3947</td>
+              <td class="text-right">2</td>
+          </tr>
+          <tr>
+              <td>Per-Kristian Helland</td>
+              <td class="text-right">947</td>
+              <td class="text-right"></td>
+              <td class="text-right">1</td>
+              <td class="text-right">603</td>
+              <td class="text-right">45</td>
+              <td class="text-right">292</td>
+              <td class="text-right">6</td>
+          </tr>
+          <tr>
+              <td>Intense</td>
+              <td class="text-right">875</td>
+              <td class="text-right"></td>
+              <td class="text-right">95</td>
+              <td class="text-right">25</td>
+              <td class="text-right">3</td>
+              <td class="text-right">1</td>
+              <td class="text-right">751</td>
+          </tr>
+      </table>
+  </div>
+      <div id="mapid"></div>
+
+      <script>
+          const createIcon = (iconColor) =>
+              new L.Icon({
+                  iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-${iconColor}.png`,
+                  shadowUrl:
+                      "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
+                  iconSize: [11, 20],
+                  iconAnchor: [6, 20],
+                  popupAnchor: [1, -34],
+                  shadowSize: [0, 0],
+              });
+          const icons = ["gold", "grey", "orange", "blue"].map(createIcon);
+          var map = L.map("mapid").setView([51.505, -0.09], 2);
+          L.tileLayer(
+              "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}",
+              {
+                  attribution:
+                      'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+                  maxZoom: 18,
+                  id: "mapbox/streets-v11",
+                  tileSize: 512,
+                  zoomOffset: -1,
+                  accessToken:
+                      "pk.eyJ1Ijoic2xhc2hwIiwiYSI6ImNrajc2ejVuMzZna2QydnFqNjg2eGx0cDcifQ.0YrOWeCFuS0URH6E1t3qJg",
+              }
+          ).addTo(map);
+          const answer = {"lat":42.75615152185166,"lng":12.856637954395637};
+          let guesses = [{"playerName":"Nightey","roundScoreInPoints":4765,"lat":43.38717512286167,"lng":12.17530246493788},{"playerName":"Radu C","roundScoreInPoints":4921,"lat":42.74901428754355,"lng":12.495641126343497},{"playerName":"- \u2119\uD835\uDD60\uD835\uDD5D\uD835\uDD5A\uD835\uDD65\uD835\uDD5A\uD835\uDD69 -","roundScoreInPoints":4660,"lat":43.22899311144487,"lng":11.386285503064073},{"playerName":"Topotic ","roundScoreInPoints":4626,"lat":43.033048274873366,"lng":11.129177327140724},{"playerName":"AL Johns - Indianapolis","roundScoreInPoints":4949,"lat":42.846116924547545,"lng":13.055786286593989},{"playerName":"Giovanni1798p","roundScoreInPoints":4393,"lat":44.31710564499353,"lng":10.803487993242923},{"playerName":"Toris B","roundScoreInPoints":4063,"lat":45.60370443190505,"lng":10.116453411377961},{"playerName":"Calzone","roundScoreInPoints":4042,"lat":46.30275744990382,"lng":12.861613100634584},{"playerName":"Sverre","roundScoreInPoints":4754,"lat":43.344290287680785,"lng":12.034508721259613},{"playerName":"slashP","roundScoreInPoints":4042,"lat":46.02324063817074,"lng":10.935828063877636},{"playerName":"Altingwouk","roundScoreInPoints":3847,"lat":43.34889006486132,"lng":18.783965588503918},{"playerName":"The Queen of the UK","roundScoreInPoints":4067,"lat":45.89900696440355,"lng":10.895436439045016},{"playerName":"Kurt","roundScoreInPoints":4751,"lat":43.414262926534185,"lng":12.114529638695217},{"playerName":"morqk","roundScoreInPoints":4552,"lat":44.043580982177055,"lng":11.636126244140428},{"playerName":"Kuahs\uD835\uDE5E ","roundScoreInPoints":4005,"lat":46.17591149414985,"lng":10.88505145867317},{"playerName":"AxelBaxel","roundScoreInPoints":4663,"lat":41.781483343795784,"lng":13.71161165978964},{"playerName":"Wilsonia","roundScoreInPoints":4352,"lat":44.544008060993676,"lng":10.822505385444607},{"playerName":":P","roundScoreInPoints":4115,"lat":45.89115426500029,"lng":11.664855503025775},{"playerName":"HugoAlvara2","roundScoreInPoints":4063,"lat":45.48016556141043,"lng":9.887866159970251},{"playerName":"sunkencity64","roundScoreInPoints":4118,"lat":45.42094928960923,"lng":15.40732112812617},{"playerName":"  \uD835\uDD64\uD835\uDD60\uD835\uDD66\uD835\uDD65\uD835\uDD59\uD835\uDD53\uD835\uDD6A\uD835\uDD56\uD835\uDFDB\uD835\uDFD8\uD835\uDFD8\uD835\uDFD8","roundScoreInPoints":4053,"lat":46.17350541395855,"lng":11.791876406307097},{"playerName":"Apple","roundScoreInPoints":4512,"lat":44.017250408283736,"lng":11.262132283956817},{"playerName":"The MAYO of \u0412\u043E\u0440\u043A\u0443\u0442\u0430\u0301","roundScoreInPoints":4120,"lat":45.39644085977392,"lng":10.277149812553063},{"playerName":"Wester Wobbes","roundScoreInPoints":3862,"lat":46.325275916461216,"lng":9.473849864590331},{"playerName":"\uD83C\uDD76\uD83C\uDD81\uD83C\uDD7E\uD83C\uDD86\uD83C\uDD7B","roundScoreInPoints":3889,"lat":46.18045137983391,"lng":9.474505958325835},{"playerName":"Dcfmyr","roundScoreInPoints":4026,"lat":46.057653674385854,"lng":10.806046974265598},{"playerName":"Luxlad ","roundScoreInPoints":4031,"lat":45.72364817101634,"lng":10.028233055122229},{"playerName":"Geomane10K","roundScoreInPoints":4069,"lat":45.65407581892176,"lng":10.284179738550506},{"playerName":"busstop","roundScoreInPoints":3947,"lat":45.96888630520833,"lng":9.66183476186849},{"playerName":"Per-Kristian Helland","roundScoreInPoints":292,"lat":-4.4735565888249464,"lng":9.12627181693199},{"playerName":"Intense","roundScoreInPoints":1,"lat":-79.71077243439714,"lng":179.7922917334664}];
+          guesses.sort((a, b) => b.roundScoreInPoints - a.roundScoreInPoints);
+          guesses.forEach((guess, index) =>
+              L.marker([guess.lat, guess.lng], {
+                  zIndexOffset: guesses.length - index,
+                  icon: icons.slice(index)[0] || [...icons].pop(),
+              })
+                  .bindPopup(
+                      `<b>${guess.playerName}</b><br>${guess.roundScoreInPoints}`
+                  )
+                  .addTo(map)
+          );
+          L.marker([answer.lat, answer.lng], {
+              zIndexOffset: guesses.length + 100,
+              icon: createIcon("green"),
+          })
+              .bindPopup("<b>Actual location</b>")
+              .addTo(map);
+      </script>
+  </body>
+</html>
