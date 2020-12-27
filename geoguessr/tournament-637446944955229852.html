@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+
+    <title>Geoguessr tournament</title>
+    <meta name="description" content="Geoguessr tournament" />
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+        integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+        crossorigin=""
+    />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <style>
+        body {
+            background: #808080;
+        }
+
+        #mapid {
+            height: 640px;
+        }
+    </style>
+</head>
+
+<body>
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+        integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+        crossorigin=""></script>
+
+<div class="row">
+    <div class="col-6">
+        <table class="table table-dark">
+            <tr>
+                <th>Player</th>
+                <th class="text-right">Points</th>
+                <th class="text-right">Eliminated in game</th>
+                <th class="text-right" onclick="viewRound(0)">R1</th>
+                <th class="text-right" onclick="viewRound(1)">R2</th>
+                <th class="text-right" onclick="viewRound(2)">R3</th>
+                <th class="text-right" onclick="viewRound(3)">R4</th>
+                <th class="text-right" onclick="viewRound(4)">R5</th>
+            </tr>
+            <tr>
+                <td>Nightey</td>
+                <td class="text-right">23702</td>
+                <td class="text-right"></td>
+                <td class="text-right">4653</td>
+                <td class="text-right">4958</td>
+                <td class="text-right">4807</td>
+                <td class="text-right">4765</td>
+                <td class="text-right">4519</td>
+            </tr>
+            <tr>
+                <td>Radu C</td>
+                <td class="text-right">23317</td>
+                <td class="text-right"></td>
+                <td class="text-right">3635</td>
+                <td class="text-right">4992</td>
+                <td class="text-right">4903</td>
+                <td class="text-right">4921</td>
+                <td class="text-right">4866</td>
+            </tr>
+            <tr>
+                <td>- ℙ𝕠𝕝𝕚𝕥𝕚𝕩 -</td>
+                <td class="text-right">22761</td>
+                <td class="text-right"></td>
+                <td class="text-right">3826</td>
+                <td class="text-right">4837</td>
+                <td class="text-right">4566</td>
+                <td class="text-right">4660</td>
+                <td class="text-right">4872</td>
+            </tr>
+            <tr>
+                <td>Topotic </td>
+                <td class="text-right">22089</td>
+                <td class="text-right"></td>
+                <td class="text-right">3428</td>
+                <td class="text-right">4383</td>
+                <td class="text-right">4926</td>
+                <td class="text-right">4626</td>
+                <td class="text-right">4726</td>
+            </tr>
+            <tr>
+                <td>AL Johns - Indianapolis</td>
+                <td class="text-right">21744</td>
+                <td class="text-right"></td>
+                <td class="text-right">4350</td>
+                <td class="text-right">3915</td>
+                <td class="text-right">4363</td>
+                <td class="text-right">4949</td>
+                <td class="text-right">4167</td>
+            </tr>
+            <tr>
+                <td>Giovanni1798p</td>
+                <td class="text-right">21006</td>
+                <td class="text-right"></td>
+                <td class="text-right">4928</td>
+                <td class="text-right">4965</td>
+                <td class="text-right">4752</td>
+                <td class="text-right">4393</td>
+                <td class="text-right">1968</td>
+            </tr>
+            <tr>
+                <td>Toris B</td>
+                <td class="text-right">20990</td>
+                <td class="text-right"></td>
+                <td class="text-right">4718</td>
+                <td class="text-right">4831</td>
+                <td class="text-right">4744</td>
+                <td class="text-right">4063</td>
+                <td class="text-right">2634</td>
+            </tr>
+            <tr>
+                <td>Calzone</td>
+                <td class="text-right">20884</td>
+                <td class="text-right"></td>
+                <td class="text-right">4631</td>
+                <td class="text-right">4058</td>
+                <td class="text-right">4867</td>
+                <td class="text-right">4042</td>
+                <td class="text-right">3286</td>
+            </tr>
+            <tr>
+                <td>Sverre</td>
+                <td class="text-right">20617</td>
+                <td class="text-right"></td>
+                <td class="text-right">3877</td>
+                <td class="text-right">4909</td>
+                <td class="text-right">4774</td>
+                <td class="text-right">4754</td>
+                <td class="text-right">2303</td>
+            </tr>
+            <tr>
+                <td>slashP</td>
+                <td class="text-right">20274</td>
+                <td class="text-right"></td>
+                <td class="text-right">4429</td>
+                <td class="text-right">4052</td>
+                <td class="text-right">4742</td>
+                <td class="text-right">4042</td>
+                <td class="text-right">3009</td>
+            </tr>
+            <tr>
+                <td>Altingwouk</td>
+                <td class="text-right">19976</td>
+                <td class="text-right"></td>
+                <td class="text-right">4541</td>
+                <td class="text-right">4814</td>
+                <td class="text-right">4385</td>
+                <td class="text-right">3847</td>
+                <td class="text-right">2389</td>
+            </tr>
+            <tr>
+                <td>The Queen of the UK</td>
+                <td class="text-right">19641</td>
+                <td class="text-right"></td>
+                <td class="text-right">4559</td>
+                <td class="text-right">3980</td>
+                <td class="text-right">4710</td>
+                <td class="text-right">4067</td>
+                <td class="text-right">2325</td>
+            </tr>
+            <tr>
+                <td>Kurt</td>
+                <td class="text-right">19584</td>
+                <td class="text-right"></td>
+                <td class="text-right">1095</td>
+                <td class="text-right">4063</td>
+                <td class="text-right">5000</td>
+                <td class="text-right">4751</td>
+                <td class="text-right">4675</td>
+            </tr>
+            <tr>
+                <td>morqk</td>
+                <td class="text-right">19495</td>
+                <td class="text-right"></td>
+                <td class="text-right">4407</td>
+                <td class="text-right">3761</td>
+                <td class="text-right">4615</td>
+                <td class="text-right">4552</td>
+                <td class="text-right">2160</td>
+            </tr>
+            <tr>
+                <td>Kuahs𝙞 </td>
+                <td class="text-right">19326</td>
+                <td class="text-right"></td>
+                <td class="text-right">4055</td>
+                <td class="text-right">4220</td>
+                <td class="text-right">4718</td>
+                <td class="text-right">4005</td>
+                <td class="text-right">2328</td>
+            </tr>
+            <tr>
+                <td>AxelBaxel</td>
+                <td class="text-right">19130</td>
+                <td class="text-right"></td>
+                <td class="text-right">3853</td>
+                <td class="text-right">4161</td>
+                <td class="text-right">4872</td>
+                <td class="text-right">4663</td>
+                <td class="text-right">1581</td>
+            </tr>
+            <tr>
+                <td>Wilsonia</td>
+                <td class="text-right">18997</td>
+                <td class="text-right"></td>
+                <td class="text-right">3535</td>
+                <td class="text-right">3951</td>
+                <td class="text-right">4530</td>
+                <td class="text-right">4352</td>
+                <td class="text-right">2629</td>
+            </tr>
+            <tr>
+                <td>:P</td>
+                <td class="text-right">18705</td>
+                <td class="text-right"></td>
+                <td class="text-right">4837</td>
+                <td class="text-right">4950</td>
+                <td class="text-right">4284</td>
+                <td class="text-right">4115</td>
+                <td class="text-right">519</td>
+            </tr>
+            <tr>
+                <td>HugoAlvara2</td>
+                <td class="text-right">18520</td>
+                <td class="text-right"></td>
+                <td class="text-right">4820</td>
+                <td class="text-right">4936</td>
+                <td class="text-right">4629</td>
+                <td class="text-right">4063</td>
+                <td class="text-right">72</td>
+            </tr>
+            <tr>
+                <td>sunkencity64</td>
+                <td class="text-right">18504</td>
+                <td class="text-right"></td>
+                <td class="text-right">4796</td>
+                <td class="text-right">4339</td>
+                <td class="text-right">4646</td>
+                <td class="text-right">4118</td>
+                <td class="text-right">605</td>
+            </tr>
+            <tr>
+                <td>  𝕤𝕠𝕦𝕥𝕙𝕓𝕪𝕖𝟛𝟘𝟘𝟘</td>
+                <td class="text-right">18269</td>
+                <td class="text-right"></td>
+                <td class="text-right">3771</td>
+                <td class="text-right">4956</td>
+                <td class="text-right">4864</td>
+                <td class="text-right">4053</td>
+                <td class="text-right">625</td>
+            </tr>
+            <tr>
+                <td>Apple</td>
+                <td class="text-right">18138</td>
+                <td class="text-right"></td>
+                <td class="text-right">4459</td>
+                <td class="text-right">4178</td>
+                <td class="text-right">4353</td>
+                <td class="text-right">4512</td>
+                <td class="text-right">636</td>
+            </tr>
+            <tr>
+                <td>The MAYO of Воркута́</td>
+                <td class="text-right">18035</td>
+                <td class="text-right"></td>
+                <td class="text-right">4077</td>
+                <td class="text-right">4202</td>
+                <td class="text-right">4950</td>
+                <td class="text-right">4120</td>
+                <td class="text-right">686</td>
+            </tr>
+            <tr>
+                <td>Wester Wobbes</td>
+                <td class="text-right">17164</td>
+                <td class="text-right"></td>
+                <td class="text-right">4746</td>
+                <td class="text-right">4220</td>
+                <td class="text-right">4315</td>
+                <td class="text-right">3862</td>
+                <td class="text-right">21</td>
+            </tr>
+            <tr>
+                <td>🅶🆁🅾🆆🅻</td>
+                <td class="text-right">16639</td>
+                <td class="text-right"></td>
+                <td class="text-right">3021</td>
+                <td class="text-right">4959</td>
+                <td class="text-right">4768</td>
+                <td class="text-right">3889</td>
+                <td class="text-right">2</td>
+            </tr>
+            <tr>
+                <td>Dcfmyr</td>
+                <td class="text-right">15440</td>
+                <td class="text-right"></td>
+                <td class="text-right">4399</td>
+                <td class="text-right">2595</td>
+                <td class="text-right">4417</td>
+                <td class="text-right">4026</td>
+                <td class="text-right">3</td>
+            </tr>
+            <tr>
+                <td>Luxlad </td>
+                <td class="text-right">15280</td>
+                <td class="text-right"></td>
+                <td class="text-right">3509</td>
+                <td class="text-right">4177</td>
+                <td class="text-right">3509</td>
+                <td class="text-right">4031</td>
+                <td class="text-right">54</td>
+            </tr>
+            <tr>
+                <td>Geomane10K</td>
+                <td class="text-right">14114</td>
+                <td class="text-right"></td>
+                <td class="text-right">1266</td>
+                <td class="text-right">4038</td>
+                <td class="text-right">2902</td>
+                <td class="text-right">4069</td>
+                <td class="text-right">1839</td>
+            </tr>
+            <tr>
+                <td>busstop</td>
+                <td class="text-right">13646</td>
+                <td class="text-right"></td>
+                <td class="text-right">4318</td>
+                <td class="text-right">2695</td>
+                <td class="text-right">2684</td>
+                <td class="text-right">3947</td>
+                <td class="text-right">2</td>
+            </tr>
+            <tr>
+                <td>Per-Kristian Helland</td>
+                <td class="text-right">947</td>
+                <td class="text-right"></td>
+                <td class="text-right">1</td>
+                <td class="text-right">603</td>
+                <td class="text-right">45</td>
+                <td class="text-right">292</td>
+                <td class="text-right">6</td>
+            </tr>
+            <tr>
+                <td>Intense</td>
+                <td class="text-right">875</td>
+                <td class="text-right"></td>
+                <td class="text-right">95</td>
+                <td class="text-right">25</td>
+                <td class="text-right">3</td>
+                <td class="text-right">1</td>
+                <td class="text-right">751</td>
+            </tr>
+        </table>
+    </div>
+    <div class="col-6" id="mapid"></div>
+</div>
+
+<script>
+    const answers = [{"lat":4.516899226151436,"lng":-74.78958544622071},{"lat":5.855105111127449,"lng":100.4587103112235},{"lat":41.13573761681224,"lng":-86.89129669492446},{"lat":42.75615152185166,"lng":12.856637954395637},{"lat":-51.25883138936777,"lng":-72.35507277480463}];
+    const allGuesses = [[{"playerName":"Nightey","roundScoreInPoints":4653,"lat":5.636982645455437,"lng":-74.36115550598798},{"playerName":"Radu C","roundScoreInPoints":3635,"lat":9.820087883417333,"lng":-75.11391559301042},{"playerName":"- \u2119\uD835\uDD60\uD835\uDD5D\uD835\uDD5A\uD835\uDD65\uD835\uDD5A\uD835\uDD69 -","roundScoreInPoints":3826,"lat":8.954975400466916,"lng":-74.35606602755797},{"playerName":"Topotic ","roundScoreInPoints":3428,"lat":10.773301084999156,"lng":-74.11015443031923},{"playerName":"AL Johns - Indianapolis","roundScoreInPoints":4350,"lat":6.6985033409455506,"lng":-75.58803817782837},{"playerName":"Giovanni1798p","roundScoreInPoints":4928,"lat":4.655818017992124,"lng":-74.58948203721876},{"playerName":"Toris B","roundScoreInPoints":4718,"lat":5.0832484681618055,"lng":-75.57580826527573},{"playerName":"Calzone","roundScoreInPoints":4631,"lat":3.2413501046670006,"lng":-74.7389582665336},{"playerName":"Sverre","roundScoreInPoints":3877,"lat":1.1801982990330129,"lng":-77.40829540544655},{"playerName":"slashP","roundScoreInPoints":4429,"lat":3.4189743905104044,"lng":-76.4914534760955},{"playerName":"Altingwouk","roundScoreInPoints":4541,"lat":3.1188882558764397,"lng":-73.99723263591},{"playerName":"The Queen of the UK","roundScoreInPoints":4559,"lat":2.9898182798293966,"lng":-74.9896391153114},{"playerName":"Kurt","roundScoreInPoints":1095,"lat":17.221254889335665,"lng":-97.14417645709256},{"playerName":"morqk","roundScoreInPoints":4407,"lat":2.7993344087929697,"lng":-76.00794834501497},{"playerName":"Kuahs\uD835\uDE5E ","roundScoreInPoints":4055,"lat":7.990597578487154,"lng":-75.15261227048468},{"playerName":"AxelBaxel","roundScoreInPoints":3853,"lat":8.694838370070388,"lng":-75.98950271029247},{"playerName":"Wilsonia","roundScoreInPoints":3535,"lat":-0.026446522699853398,"lng":-78.3644465477836},{"playerName":":P","roundScoreInPoints":4837,"lat":4.627593282393044,"lng":-75.33164540886978},{"playerName":"HugoAlvara2","roundScoreInPoints":4820,"lat":5.055975914329911,"lng":-75.08013156641907},{"playerName":"sunkencity64","roundScoreInPoints":4796,"lat":4.727695393400512,"lng":-74.12458928454436},{"playerName":"  \uD835\uDD64\uD835\uDD60\uD835\uDD66\uD835\uDD65\uD835\uDD59\uD835\uDD53\uD835\uDD6A\uD835\uDD56\uD835\uDFDB\uD835\uDFD8\uD835\uDFD8\uD835\uDFD8","roundScoreInPoints":3771,"lat":9.192078906407003,"lng":-74.29822413688004},{"playerName":"Apple","roundScoreInPoints":4459,"lat":6.259500524896035,"lng":-75.57459239792706},{"playerName":"The MAYO of \u0412\u043E\u0440\u043A\u0443\u0442\u0430\u0301","roundScoreInPoints":4077,"lat":7.920279984669348,"lng":-74.76912420398611},{"playerName":"Wester Wobbes","roundScoreInPoints":4746,"lat":4.723959176875676,"lng":-73.94424148120032},{"playerName":"\uD83C\uDD76\uD83C\uDD81\uD83C\uDD7E\uD83C\uDD86\uD83C\uDD7B","roundScoreInPoints":3021,"lat":-2.16676655333619,"lng":-79.88356036180079},{"playerName":"Dcfmyr","roundScoreInPoints":4399,"lat":6.640087612140694,"lng":-74.55151945561359},{"playerName":"Luxlad ","roundScoreInPoints":3509,"lat":10.379206067435716,"lng":-75.48099139273826},{"playerName":"Geomane10K","roundScoreInPoints":1266,"lat":17.357675876546285,"lng":-94.14987448101766},{"playerName":"busstop","roundScoreInPoints":4318,"lat":6.913352242398469,"lng":-74.29718800983768},{"playerName":"Per-Kristian Helland","roundScoreInPoints":1,"lat":-28.532485366996557,"lng":128.657521816932},{"playerName":"Intense","roundScoreInPoints":95,"lat":-51.26196181306824,"lng":-116.2233332665336}],[{"playerName":"Nightey","roundScoreInPoints":4958,"lat":5.979991185027305,"lng":100.524422703992},{"playerName":"Radu C","roundScoreInPoints":4992,"lat":5.84995932631357,"lng":100.48420158537024},{"playerName":"- \u2119\uD835\uDD60\uD835\uDD5D\uD835\uDD5A\uD835\uDD65\uD835\uDD5A\uD835\uDD69 -","roundScoreInPoints":4837,"lat":5.3898163603929055,"lng":100.75752148671643},{"playerName":"Topotic ","roundScoreInPoints":4383,"lat":3.748853923845988,"lng":101.08280141807228},{"playerName":"AL Johns - Indianapolis","roundScoreInPoints":3915,"lat":2.439481354852078,"lng":102.69166520142112},{"playerName":"Giovanni1798p","roundScoreInPoints":4965,"lat":5.971229822577236,"lng":100.44458892548225},{"playerName":"Toris B","roundScoreInPoints":4831,"lat":5.298370604796168,"lng":100.59470869550933},{"playerName":"Calzone","roundScoreInPoints":4058,"lat":3.2400719520858283,"lng":102.76023916927005},{"playerName":"Sverre","roundScoreInPoints":4909,"lat":5.660967523651076,"lng":100.69607002874136},{"playerName":"slashP","roundScoreInPoints":4052,"lat":2.958168952830599,"lng":102.43956107802916},{"playerName":"Altingwouk","roundScoreInPoints":4814,"lat":6.4384666395123205,"lng":100.21552769486425},{"playerName":"The Queen of the UK","roundScoreInPoints":3980,"lat":2.7218498596722696,"lng":102.61753932429679},{"playerName":"Kurt","roundScoreInPoints":4063,"lat":3.1316477564860707,"lng":102.60039521757642},{"playerName":"morqk","roundScoreInPoints":3761,"lat":1.9433597272625607,"lng":103.15109659382534},{"playerName":"Kuahs\uD835\uDE5E ","roundScoreInPoints":4220,"lat":3.7580015784473444,"lng":102.36354972201924},{"playerName":"AxelBaxel","roundScoreInPoints":4161,"lat":4.807445562910132,"lng":103.34684321212035},{"playerName":"Wilsonia","roundScoreInPoints":3951,"lat":2.55489167823505,"lng":102.58796735428882},{"playerName":":P","roundScoreInPoints":4950,"lat":6.021632054785522,"lng":100.44188660401382},{"playerName":"HugoAlvara2","roundScoreInPoints":4936,"lat":6.06921533649026,"lng":100.45145227497198},{"playerName":"sunkencity64","roundScoreInPoints":4339,"lat":3.9875796641183925,"lng":101.91299672534518},{"playerName":"  \uD835\uDD64\uD835\uDD60\uD835\uDD66\uD835\uDD65\uD835\uDD59\uD835\uDD53\uD835\uDD6A\uD835\uDD56\uD835\uDFDB\uD835\uDFD8\uD835\uDFD8\uD835\uDFD8","roundScoreInPoints":4956,"lat":6.000880165981447,"lng":100.45980860902091},{"playerName":"Apple","roundScoreInPoints":4178,"lat":3.12973698272226,"lng":101.70260780121566},{"playerName":"The MAYO of \u0412\u043E\u0440\u043A\u0443\u0442\u0430\u0301","roundScoreInPoints":4202,"lat":3.475247870020095,"lng":102.11694645086695},{"playerName":"Wester Wobbes","roundScoreInPoints":4220,"lat":3.287335641419341,"lng":101.64483828861846},{"playerName":"\uD83C\uDD76\uD83C\uDD81\uD83C\uDD7E\uD83C\uDD86\uD83C\uDD7B","roundScoreInPoints":4959,"lat":5.730489275670391,"lng":100.51260948823881},{"playerName":"Dcfmyr","roundScoreInPoints":2595,"lat":-4.141420121860486,"lng":104.88801034001206},{"playerName":"Luxlad ","roundScoreInPoints":4177,"lat":3.5395476270414057,"lng":102.37088569248476},{"playerName":"Geomane10K","roundScoreInPoints":4038,"lat":2.651903869444283,"lng":102.0220977208736},{"playerName":"busstop","roundScoreInPoints":2695,"lat":1.615396615626716,"lng":109.86891573624773},{"playerName":"Per-Kristian Helland","roundScoreInPoints":603,"lat":-24.122765620464087,"lng":119.51689681693199},{"playerName":"Intense","roundScoreInPoints":25,"lat":-69.70289408062013,"lng":169.9485417334664}],[{"playerName":"Nightey","roundScoreInPoints":4807,"lat":40.50505190677522,"lng":-86.64981249124074},{"playerName":"Radu C","roundScoreInPoints":4903,"lat":41.39463924038031,"lng":-86.63013323065337},{"playerName":"- \u2119\uD835\uDD60\uD835\uDD5D\uD835\uDD5A\uD835\uDD65\uD835\uDD5A\uD835\uDD69 -","roundScoreInPoints":4566,"lat":39.7455885198318,"lng":-86.1034163699486},{"playerName":"Topotic ","roundScoreInPoints":4926,"lat":40.88638641297911,"lng":-86.8839071693651},{"playerName":"AL Johns - Indianapolis","roundScoreInPoints":4363,"lat":39.20485261677709,"lng":-85.32695814577501},{"playerName":"Giovanni1798p","roundScoreInPoints":4752,"lat":40.377761218968196,"lng":-86.38775952154157},{"playerName":"Toris B","roundScoreInPoints":4744,"lat":41.07821311014167,"lng":-85.7331561528469},{"playerName":"Calzone","roundScoreInPoints":4867,"lat":40.709025425696225,"lng":-86.70822358496123},{"playerName":"Sverre","roundScoreInPoints":4774,"lat":40.39965179465963,"lng":-86.59051160850015},{"playerName":"slashP","roundScoreInPoints":4742,"lat":40.29569160944608,"lng":-86.53671275879611},{"playerName":"Altingwouk","roundScoreInPoints":4385,"lat":39.275052878785985,"lng":-85.38862384685461},{"playerName":"The Queen of the UK","roundScoreInPoints":4710,"lat":40.219803667887554,"lng":-86.37261695759037},{"playerName":"Kurt","roundScoreInPoints":5000,"lat":41.135952974672946,"lng":-86.89149516419525},{"playerName":"morqk","roundScoreInPoints":4615,"lat":40.77596632672633,"lng":-85.18881995603249},{"playerName":"Kuahs\uD835\uDE5E ","roundScoreInPoints":4718,"lat":40.247845065311516,"lng":-86.38220517950778},{"playerName":"AxelBaxel","roundScoreInPoints":4872,"lat":40.716342600008055,"lng":-86.75614428787173},{"playerName":"Wilsonia","roundScoreInPoints":4530,"lat":39.50062647060405,"lng":-86.65669309579505},{"playerName":":P","roundScoreInPoints":4284,"lat":38.83496681262253,"lng":-85.38250028454897},{"playerName":"HugoAlvara2","roundScoreInPoints":4629,"lat":40.15068536124687,"lng":-85.80554711079625},{"playerName":"sunkencity64","roundScoreInPoints":4646,"lat":40.13091435846566,"lng":-85.96971308254479},{"playerName":"  \uD835\uDD64\uD835\uDD60\uD835\uDD66\uD835\uDD65\uD835\uDD59\uD835\uDD53\uD835\uDD6A\uD835\uDD56\uD835\uDFDB\uD835\uDFD8\uD835\uDFD8\uD835\uDFD8","roundScoreInPoints":4864,"lat":40.68784564888503,"lng":-86.74688549689398},{"playerName":"Apple","roundScoreInPoints":4353,"lat":39.17013932246885,"lng":-85.30607357940676},{"playerName":"The MAYO of \u0412\u043E\u0440\u043A\u0443\u0442\u0430\u0301","roundScoreInPoints":4950,"lat":41.30265228455538,"lng":-86.89130108808212},{"playerName":"Wester Wobbes","roundScoreInPoints":4315,"lat":39.00755299094192,"lng":-85.29137209468331},{"playerName":"\uD83C\uDD76\uD83C\uDD81\uD83C\uDD7E\uD83C\uDD86\uD83C\uDD7B","roundScoreInPoints":4768,"lat":40.380495682490604,"lng":-86.5819207607704},{"playerName":"Dcfmyr","roundScoreInPoints":4417,"lat":39.83325330332752,"lng":-84.78254990820568},{"playerName":"Luxlad ","roundScoreInPoints":3509,"lat":38.23897970854349,"lng":-93.57887046436832},{"playerName":"Geomane10K","roundScoreInPoints":2902,"lat":39.3594792086868,"lng":-98.55207229029463},{"playerName":"busstop","roundScoreInPoints":2684,"lat":31.036071178855405,"lng":-89.80531628783326},{"playerName":"Per-Kristian Helland","roundScoreInPoints":45,"lat":-33.35445906129493,"lng":-113.21747818306802},{"playerName":"Intense","roundScoreInPoints":3,"lat":-78.6458133575462,"lng":-33.96243037818242}],[{"playerName":"Nightey","roundScoreInPoints":4765,"lat":43.38717512286167,"lng":12.17530246493788},{"playerName":"Radu C","roundScoreInPoints":4921,"lat":42.74901428754355,"lng":12.495641126343497},{"playerName":"- \u2119\uD835\uDD60\uD835\uDD5D\uD835\uDD5A\uD835\uDD65\uD835\uDD5A\uD835\uDD69 -","roundScoreInPoints":4660,"lat":43.22899311144487,"lng":11.386285503064073},{"playerName":"Topotic ","roundScoreInPoints":4626,"lat":43.033048274873366,"lng":11.129177327140724},{"playerName":"AL Johns - Indianapolis","roundScoreInPoints":4949,"lat":42.846116924547545,"lng":13.055786286593989},{"playerName":"Giovanni1798p","roundScoreInPoints":4393,"lat":44.31710564499353,"lng":10.803487993242923},{"playerName":"Toris B","roundScoreInPoints":4063,"lat":45.60370443190505,"lng":10.116453411377961},{"playerName":"Calzone","roundScoreInPoints":4042,"lat":46.30275744990382,"lng":12.861613100634584},{"playerName":"Sverre","roundScoreInPoints":4754,"lat":43.344290287680785,"lng":12.034508721259613},{"playerName":"slashP","roundScoreInPoints":4042,"lat":46.02324063817074,"lng":10.935828063877636},{"playerName":"Altingwouk","roundScoreInPoints":3847,"lat":43.34889006486132,"lng":18.783965588503918},{"playerName":"The Queen of the UK","roundScoreInPoints":4067,"lat":45.89900696440355,"lng":10.895436439045016},{"playerName":"Kurt","roundScoreInPoints":4751,"lat":43.414262926534185,"lng":12.114529638695217},{"playerName":"morqk","roundScoreInPoints":4552,"lat":44.043580982177055,"lng":11.636126244140428},{"playerName":"Kuahs\uD835\uDE5E ","roundScoreInPoints":4005,"lat":46.17591149414985,"lng":10.88505145867317},{"playerName":"AxelBaxel","roundScoreInPoints":4663,"lat":41.781483343795784,"lng":13.71161165978964},{"playerName":"Wilsonia","roundScoreInPoints":4352,"lat":44.544008060993676,"lng":10.822505385444607},{"playerName":":P","roundScoreInPoints":4115,"lat":45.89115426500029,"lng":11.664855503025775},{"playerName":"HugoAlvara2","roundScoreInPoints":4063,"lat":45.48016556141043,"lng":9.887866159970251},{"playerName":"sunkencity64","roundScoreInPoints":4118,"lat":45.42094928960923,"lng":15.40732112812617},{"playerName":"  \uD835\uDD64\uD835\uDD60\uD835\uDD66\uD835\uDD65\uD835\uDD59\uD835\uDD53\uD835\uDD6A\uD835\uDD56\uD835\uDFDB\uD835\uDFD8\uD835\uDFD8\uD835\uDFD8","roundScoreInPoints":4053,"lat":46.17350541395855,"lng":11.791876406307097},{"playerName":"Apple","roundScoreInPoints":4512,"lat":44.017250408283736,"lng":11.262132283956817},{"playerName":"The MAYO of \u0412\u043E\u0440\u043A\u0443\u0442\u0430\u0301","roundScoreInPoints":4120,"lat":45.39644085977392,"lng":10.277149812553063},{"playerName":"Wester Wobbes","roundScoreInPoints":3862,"lat":46.325275916461216,"lng":9.473849864590331},{"playerName":"\uD83C\uDD76\uD83C\uDD81\uD83C\uDD7E\uD83C\uDD86\uD83C\uDD7B","roundScoreInPoints":3889,"lat":46.18045137983391,"lng":9.474505958325835},{"playerName":"Dcfmyr","roundScoreInPoints":4026,"lat":46.057653674385854,"lng":10.806046974265598},{"playerName":"Luxlad ","roundScoreInPoints":4031,"lat":45.72364817101634,"lng":10.028233055122229},{"playerName":"Geomane10K","roundScoreInPoints":4069,"lat":45.65407581892176,"lng":10.284179738550506},{"playerName":"busstop","roundScoreInPoints":3947,"lat":45.96888630520833,"lng":9.66183476186849},{"playerName":"Per-Kristian Helland","roundScoreInPoints":292,"lat":-4.4735565888249464,"lng":9.12627181693199},{"playerName":"Intense","roundScoreInPoints":1,"lat":-79.71077243439714,"lng":179.7922917334664}],[{"playerName":"Nightey","roundScoreInPoints":4519,"lat":-52.60734324846582,"lng":-70.71161374312695},{"playerName":"Radu C","roundScoreInPoints":4866,"lat":-51.68008587320365,"lng":-72.08927985363017},{"playerName":"- \u2119\uD835\uDD60\uD835\uDD5D\uD835\uDD5A\uD835\uDD65\uD835\uDD5A\uD835\uDD69 -","roundScoreInPoints":4872,"lat":-51.69062041850122,"lng":-72.39459704456134},{"playerName":"Topotic ","roundScoreInPoints":4726,"lat":-52.05188677525726,"lng":-71.53860447790582},{"playerName":"AL Johns - Indianapolis","roundScoreInPoints":4167,"lat":-53.31861868122484,"lng":-68.70673865767273},{"playerName":"Giovanni1798p","roundScoreInPoints":1968,"lat":-35.736156399965694,"lng":-71.15690025496386},{"playerName":"Toris B","roundScoreInPoints":2634,"lat":-40.57847798266382,"lng":-72.85866887532734},{"playerName":"Calzone","roundScoreInPoints":3286,"lat":-44.28302357285939,"lng":-71.56885815894266},{"playerName":"Sverre","roundScoreInPoints":2303,"lat":-38.3355891815689,"lng":-72.39503477996988},{"playerName":"slashP","roundScoreInPoints":3009,"lat":-43.47020020096748,"lng":-67.44324871383736},{"playerName":"Altingwouk","roundScoreInPoints":2389,"lat":-39.32383468679077,"lng":-68.03646280846073},{"playerName":"The Queen of the UK","roundScoreInPoints":2325,"lat":-38.49419559744549,"lng":-72.0057640436209},{"playerName":"Kurt","roundScoreInPoints":4675,"lat":-52.30511223312129,"lng":-71.70102377326083},{"playerName":"morqk","roundScoreInPoints":2160,"lat":-37.265265857464435,"lng":-72.16244761775594},{"playerName":"Kuahs\uD835\uDE5E ","roundScoreInPoints":2328,"lat":-38.68433113135289,"lng":-69.42332155054697},{"playerName":"AxelBaxel","roundScoreInPoints":1581,"lat":-32.86112732430204,"lng":-64.86514432661744},{"playerName":"Wilsonia","roundScoreInPoints":2629,"lat":-40.549708120150996,"lng":-72.87082653847469},{"playerName":":P","roundScoreInPoints":519,"lat":-13.485411589125082,"lng":-72.77692769637538},{"playerName":"HugoAlvara2","roundScoreInPoints":72,"lat":-43.30356649818476,"lng":171.22999021958583},{"playerName":"sunkencity64","roundScoreInPoints":605,"lat":-16.05011297729582,"lng":-71.69318604930993},{"playerName":"  \uD835\uDD64\uD835\uDD60\uD835\uDD66\uD835\uDD65\uD835\uDD59\uD835\uDD53\uD835\uDD6A\uD835\uDD56\uD835\uDFDB\uD835\uDFD8\uD835\uDFD8\uD835\uDFD8","roundScoreInPoints":625,"lat":-16.840452710685163,"lng":-67.2153039289509},{"playerName":"Apple","roundScoreInPoints":636,"lat":-17.10357920244996,"lng":-67.63170415030504},{"playerName":"The MAYO of \u0412\u043E\u0440\u043A\u0443\u0442\u0430\u0301","roundScoreInPoints":686,"lat":-18.25015352167023,"lng":-69.18990884479372},{"playerName":"Wester Wobbes","roundScoreInPoints":21,"lat":-30.280827717053278,"lng":148.37134010908412},{"playerName":"\uD83C\uDD76\uD83C\uDD81\uD83C\uDD7E\uD83C\uDD86\uD83C\uDD7B","roundScoreInPoints":2,"lat":40.42536104010316,"lng":40.83359405652078},{"playerName":"Dcfmyr","roundScoreInPoints":3,"lat":64.17970738189533,"lng":-20.076791815098037},{"playerName":"Luxlad ","roundScoreInPoints":54,"lat":-28.13987855742612,"lng":29.705000563851044},{"playerName":"Geomane10K","roundScoreInPoints":1839,"lat":-34.59920557839299,"lng":-71.35399053618767},{"playerName":"busstop","roundScoreInPoints":2,"lat":49.02682693725448,"lng":34.671631438686255},{"playerName":"Per-Kristian Helland","roundScoreInPoints":6,"lat":-14.175004454101265,"lng":122.32939681693199},{"playerName":"Intense","roundScoreInPoints":751,"lat":-82.27784880831683,"lng":-51.77708217764182}]];
+    const createIcon = (iconColor) =>
+        new L.Icon({
+            iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-${iconColor}.png`,
+            shadowUrl:
+                "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
+            iconSize: [11, 20],
+            iconAnchor: [6, 20],
+            popupAnchor: [1, -34],
+            shadowSize: [0, 0],
+        });
+    const icons = ["gold", "grey", "orange", "blue"].map(createIcon);
+    const createMap = (answer, guesses) => {
+        const map = L.map("mapid").setView([51.505, -0.09], 2);
+        L.tileLayer(
+            "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}",
+            {
+                attribution:
+                    'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+                maxZoom: 18,
+                id: "mapbox/streets-v11",
+                tileSize: 512,
+                zoomOffset: -1,
+                accessToken:
+                    "pk.eyJ1Ijoic2xhc2hwIiwiYSI6ImNrajc2ejVuMzZna2QydnFqNjg2eGx0cDcifQ.0YrOWeCFuS0URH6E1t3qJg",
+            }
+        ).addTo(map);
+        guesses.forEach((guess, index) =>
+            L.marker([guess.lat, guess.lng],
+                {
+                    zIndexOffset: guesses.length - index,
+                    icon: icons.slice(index)[0] || [...icons].pop(),
+                })
+            .bindPopup(
+                `<b>${guess.playerName}</b><br>${guess.roundScoreInPoints}`
+            )
+            .addTo(map)
+        );
+        L.marker([answer.lat, answer.lng],
+                {
+                    zIndexOffset: guesses.length + 100,
+                    icon: createIcon("green"),
+                })
+            .bindPopup("<b>Actual location</b>")
+            .addTo(map);
+    };
+
+    const viewRound = index => createMap(answers[index], allGuesses[index]);
+</script>
+</body>
+</html>
