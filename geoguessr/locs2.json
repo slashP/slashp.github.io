@@ -1,16 +1,14 @@
 {
-  "id": "6149005b0a235900019e4571",
   "highlighted": false,
-  "name": "IntersectionGuessr - Albania",
-  "description": "Where two roads, of any size, meet. This computer generated map has 5 000 locations distributed across Shqipëria. The source for finding intersections is OpenStreetMap which means that roads could be marked there, but not on Google Maps. Most locations should definitely be findable though. Location distribution: https://docs.google.com/spreadsheets/d/1hfWWgkv5WTJ__rMGm4iYYO-exySYEmESzL7RGDVETX0/edit",
+  "name": "isg - Albania",
+  "description": "lulz.",
   "avatar": {
     "background": "sunset",
     "landscape": "houses",
     "ground": "water",
     "decoration": "oaktrees"
   },
-  "published": true,
-  "shouldIncludeExtremities": false,
+  "published": false,
   "customCoordinates": [
     {
       "lat": 41.86623601627078,
