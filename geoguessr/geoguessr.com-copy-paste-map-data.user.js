@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Copy/paste Geoguessr map data
 // @namespace    slashP
-// @version      0.1
+// @version      0.3.0
 // @description  Copy latitude, longitude, heading and pitch information from Geoguessr maps as JSON data. Add locations to maps by pasting JSON data in map maker.
 // @author       slashP
 // @match        https://www.geoguessr.com/map-maker/*
@@ -71,7 +71,10 @@
           ...existingMap,
           customCoordinates: uniqueLocations
         };
-        console.log(newMap);
+        if(existingMap.customCoordinates.length === uniqueLocations.length){
+          setAddLocationsFeedbackText("All locations were already in the map.");
+          return;
+        }
         fetch(`/api/v3/profiles/maps/${existingMap.id}`, {
           method: 'POST',
           credentials: 'same-origin',
@@ -87,10 +90,10 @@
           return response.json();
         }).then(mapResponse => {
           if (mapResponse.id) {
-            setAddLocationsFeedbackText("Map updated. Reloading page in 3 seconds.");
+            setAddLocationsFeedbackText(`Map updated. ${newMap.customCoordinates.length - existingMap.customCoordinates.length} locations added. Reloading page in 5 seconds.`);
             setTimeout(() => {
               window.location.reload();
-            }, 3000);
+            }, 5000);
           }
         });
       } catch (err) {

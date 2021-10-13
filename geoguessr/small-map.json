@@ -1,0 +1,125 @@
+{
+  "id": "61671ee58e797500017d63ee",
+  "name": "Testing map collab",
+  "description": "Teasdjfasdjf",
+  "avatar": {
+    "background": "sunrise",
+    "decoration": "palmtrees",
+    "ground": "blue",
+    "landscape": "snowmountains"
+  },
+  "highlighted": false,
+  "published": false,
+  "customCoordinates": [
+    {
+      "heading": 0,
+      "pitch": 0,
+      "zoom": 0,
+      "panoId": null,
+      "countryCode": null,
+      "stateCode": null,
+      "lat": 48.66833363177025,
+      "lng": 2.559518832667968
+    },
+    {
+      "heading": 81.96449457002537,
+      "pitch": 1.974994071213942,
+      "zoom": 0,
+      "panoId": null,
+      "countryCode": null,
+      "stateCode": null,
+      "lat": 48.30843367131216,
+      "lng": 3.6476172509896
+    },
+    {
+      "heading": 37.18421859914449,
+      "pitch": -10.186542459207374,
+      "zoom": 0,
+      "panoId": null,
+      "countryCode": null,
+      "stateCode": null,
+      "lat": 47.66236877947065,
+      "lng": 4.522911611563219
+    },
+    {
+      "heading": 311.42821205243763,
+      "pitch": -7.862553427436083,
+      "zoom": 0,
+      "panoId": null,
+      "countryCode": null,
+      "stateCode": null,
+      "lat": 47.33679427109838,
+      "lng": 4.019584166561182
+    },
+    {
+      "heading": 340.0268763497089,
+      "pitch": -7.1286606821913665,
+      "zoom": 0,
+      "panoId": null,
+      "countryCode": null,
+      "stateCode": null,
+      "lat": 46.66953358162345,
+      "lng": 2.918009797565133
+    },
+    {
+      "heading": 0,
+      "pitch": 0,
+      "zoom": 0,
+      "panoId": null,
+      "countryCode": null,
+      "stateCode": null,
+      "lat": 38.4710283,
+      "lng": -96.1848467
+    },
+    {
+      "heading": 0,
+      "pitch": 0,
+      "zoom": 0,
+      "panoId": null,
+      "countryCode": null,
+      "stateCode": null,
+      "lat": 37.604007882669,
+      "lng": -75.68728010439
+    },
+    {
+      "heading": 0,
+      "pitch": 0,
+      "zoom": 0,
+      "panoId": null,
+      "countryCode": null,
+      "stateCode": null,
+      "lat": -21.9043255,
+      "lng": -47.6214933
+    },
+    {
+      "heading": 0,
+      "pitch": 0,
+      "zoom": 0,
+      "panoId": null,
+      "countryCode": null,
+      "stateCode": null,
+      "lat": 44.6738714,
+      "lng": 30.23438
+    },
+    {
+      "heading": 0,
+      "pitch": 0,
+      "zoom": 0,
+      "panoId": null,
+      "countryCode": null,
+      "stateCode": null,
+      "lat": 64.12080809999999,
+      "lng": 13.8362496
+    },
+    {
+      "heading": 26.62,
+      "pitch": 0,
+      "zoom": 0,
+      "panoId": null,
+      "countryCode": null,
+      "stateCode": null,
+      "lat": 42.438572,
+      "lng": 1.4903628
+    }
+  ]
+}
