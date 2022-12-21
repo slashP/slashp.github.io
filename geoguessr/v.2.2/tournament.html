@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+
+    <title>Geoguessr tournament</title>
+    <meta name="description" content="Geoguessr tournament" />
+    <link rel="stylesheet"
+          href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+          integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+          crossorigin="" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inconsolata&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css">
+    <style>
+        body {
+            background: #808080;
+            font-family: 'Inconsolata', monospace;
+        }
+
+        .map {
+            height: 640px;
+        }
+
+        .leaflet-div-icon {
+            background: transparent;
+            border: none;
+        }
+
+        .leaflet-marker-icon .number {
+            position: relative;
+            top: -24px;
+            font-size: 8px;
+            width: 25px;
+            text-align: center;
+        }
+
+        .leaflet-popup-content-wrapper,
+        .leaflet-popup-tip {
+            background-color: #343a40;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+        integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+        crossorigin=""></script>
+<div class="container-fluid" id="content"></div>
+<script>
+    createGlobalNumberIcon();
+    const fullPinUrl = pinUrl => pinUrl ? `https://www.geoguessr.com/images/auto/48/48/ce/0/plain/${pinUrl}` : "https://www.geoguessr.com/_next/static/images/light-blue-8b77f771c6a2b06ebffedc913cc40f32.svg";
+    const createIcon = player => new L.HtmlDivIcon({
+        innerHtml: `<img class="rounded-circle" src="${fullPinUrl(player.pinUrl)}" style="height: 16px;">`,
+        iconUrl: "https://i.imgur.com/AuqPKXs.png",
+        playerId: player.playerId
+    });
+    const distinctBy = (array, prop) => array.filter((obj, pos, arr) => arr.map(mapObj => mapObj[prop]).indexOf(obj[prop]) === pos);
+    let icons = [];
+    let games = [];
+    let tournament = null;
+    let filteredPlayerIds = [];
+    async function init() {
+        const githubUsername = new URL(window.location).host.split('.')[0];
+        const urlSearchParams = new URL(window.location).searchParams;
+        const id = urlSearchParams.get("id");
+        const includeTotal = urlSearchParams.get("total") === "true";
+        const branch = urlSearchParams.get("branch") || "main";
+        const url = `https://raw.githubusercontent.com/${githubUsername}/${githubUsername}.github.io/${branch}/geoguessr/${id}.json`;
+        const response = await fetch(url);
+        const data = await response.json();
+        games = data.games;
+        tournament = data.tournament;
+        icons = distinctBy(games.flatMap(x => x.playerGames.map(y => ({ pinUrl: y.pinUrl, playerId: y.playerId }))), "playerId").map(createIcon);
+        const content = document.getElementById("content");
+        const tournamentHtml = includeTotal ? createTournamentTable(tournament) : '';
+        const toggleTotalScoreHtml = !includeTotal && games.length > 1 ? createToggleTournamentTotalScore() : '';
+        content.innerHTML = tournamentHtml + games.map(createGame).join('') + toggleTotalScoreHtml;
+    }
+    init();
+    const average = list => Math.trunc(list.filter(x => x !== null).reduce((a, v, i) => (a * i + v) / (i + 1)));
+    const standardDeviation = (arr, usePopulation = false) => {
+        var entries = arr.filter(x => x !== null);
+        const mean = entries.reduce((acc, val) => acc + val, 0) / entries.length;
+        const value = Math.sqrt(
+            entries.reduce((acc, val) => acc.concat((val - mean) ** 2), []).reduce((acc, val) => acc + val, 0) /
+            (entries.length - (usePopulation ? 0 : 1))
+        );
+        return Math.trunc(value);
+    };
+    const renderGameTables = () => {
+        games.forEach(game => {
+            let element = document.getElementById(`game-table-${game.gameNumber}`);
+            element.innerHTML = createGameTable(game);
+        })
+    };
+    const numberFormat = new Intl.NumberFormat();
+    let allMaps = [];
+    let lastRoundIndexSelected = [];
+    const createActualLocationLink = (answer, defaultText) => {
+        const linkText = answer.countryCode ? `<span title="${answer.countryName}" class="flag-icon flag-icon-${answer.countryCode.toLowerCase()} my-1"></span>` : defaultText;
+        return linkText && `<br><a href='https://maps.google.com/maps?q=&layer=c&cbll=${answer.lat},${answer.lng}' target="_blank" rel="noreferrer noopener">${linkText}</a>`;
+    }
+
+    const createFlagLocationLink = answer => {
+        const linkHtml = createActualLocationLink(answer);
+        return linkHtml || '';
+    }
+
+    const viewRound = (gameNumber, roundIndex, filterPlayers = false) => {
+        if (lastRoundIndexSelected[gameNumber] === roundIndex && !filterPlayers) {
+            document.getElementById(`table-round-game-${gameNumber}`).style.display = "none";
+            document.getElementById(`mapid-game-${gameNumber}-round-${roundIndex}`).style.display = "none";
+            lastRoundIndexSelected[gameNumber] = null;
+            renderGameTables();
+            return;
+        }
+
+        lastRoundIndexSelected[gameNumber] = roundIndex;
+        var game = games.filter(x => x.gameNumber === gameNumber)[0];
+        let allGuesses = game.allGuesses[roundIndex];
+        allGuesses.sort((a, b) => b.roundScoreInPoints - a.roundScoreInPoints);
+        let guesses = allGuesses.filter(x => filteredPlayerIds.length === 0 || filteredPlayerIds.includes(x.playerId));
+        [0, 1, 2, 3, 4].forEach(x => {
+            document.getElementById(`mapid-game-${gameNumber}-round-${x}`).style.display = x === roundIndex ? "" : "none";
+            var roundTable = document.getElementById(`table-round-game-${gameNumber}`);
+            roundTable.innerHTML = createRoundTable(guesses, roundIndex);
+            roundTable.style.display = "";
+        });
+        const answer = game.answers[roundIndex];
+        var existingMap = allMaps[`${gameNumber}-${roundIndex}`];
+        if (!existingMap) {
+            const map = L.map(`mapid-game-${gameNumber}-round-${roundIndex}`).setView([51.505, -0.09], 2);
+            L.tileLayer(
+                "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}",
+                {
+                    attribution:
+                        'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+                    maxZoom: 18,
+                    id: "mapbox/streets-v11",
+                    tileSize: 512,
+                    zoomOffset: -1,
+                    accessToken:
+                        "pk.eyJ1Ijoic2xhc2hwIiwiYSI6ImNrajc2ejVuMzZna2QydnFqNjg2eGx0cDcifQ.0YrOWeCFuS0URH6E1t3qJg",
+                }
+            ).addTo(map);
+            const markers = [];
+            allGuesses.forEach((guess, index) => {
+                let marker = L.marker([guess.lat, guess.lng],
+                    {
+                        zIndexOffset: allGuesses.length - index,
+                        icon: icons.filter(i => i.options.playerId === guess.playerId)[0],
+                    });
+                marker.on('mouseover', function (e) {
+                    this.openPopup();
+                });
+                marker.on('mouseout', function (e) {
+                    this.closePopup();
+                });
+                marker.bindPopup(`<b>${guess.playerName}</b><br>${guess.roundScoreInPoints}`).addTo(map);
+                markers.push({ playerId: guess.playerId, playerName: guess.playerName, marker: marker });
+            });
+            var answerMarker = L.marker([answer.lat, answer.lng],
+                {
+                    zIndexOffset: allGuesses.length + 100,
+                    icon: new L.HtmlDivIcon({ innerHtml: null, iconUrl: "https://i.imgur.com/uS6hKqq.png" }),
+                });
+            answerMarker
+                .bindPopup(createActualLocationLink(answer, 'Actual location'))
+                .addTo(map);
+            allMaps[`${gameNumber}-${roundIndex}`] = existingMap = { map: map, markers: markers, answerMarker: answerMarker };
+        }
+
+        if (filteredPlayerIds.length === 0) {
+            existingMap.markers.forEach(x => {
+                x.marker.setIcon(icons.filter(i => i.options.playerId === x.playerId)[0]);
+                existingMap.map.addLayer(x.marker);
+            });
+            existingMap.map.fitBounds(new L.featureGroup(existingMap.markers.map(x => x.marker).concat([existingMap.answerMarker])).getBounds());
+        } else {
+            existingMap.markers.forEach(x => existingMap.map.removeLayer(x.marker));
+            var filteredMarkers = existingMap.markers.filter(x => filteredPlayerIds.includes(x.playerId));
+            filteredMarkers.forEach(x => {
+                x.marker.setIcon(icons.filter(i => i.options.playerId === x.playerId)[0]);
+                existingMap.map.addLayer(x.marker);
+            });
+            existingMap.map.fitBounds(new L.featureGroup(filteredMarkers.map(x => x.marker).concat([existingMap.answerMarker])).getBounds());
+        }
+        renderGameTables();
+    };
+
+    const togglePlayer = (gameNumber, playerId) => {
+        if (filteredPlayerIds.includes(playerId)) {
+            filteredPlayerIds = filteredPlayerIds.filter(x => x !== playerId);
+        } else {
+            filteredPlayerIds.push(playerId);
+        }
+
+        viewRound(gameNumber, lastRoundIndexSelected[gameNumber] || 0, true);
+    }
+
+    const createRoundRow = (player, index) => `
+<tr>
+            <td class="text-right">${index + 1}</td>
+            <td>${player.playerName}</td>
+            <td class="text-right">${numberFormat.format(player.roundScoreInPoints)}</td>
+            <td class="text-right">${numberFormat.format(Math.round((player.distanceInMeters / 1000) * 100) / 100)} km.</td>
+</tr>
+`;
+    const createRoundTable = (players, index) => `
+<tr>
+            <th class="text-right">#</th>
+            <th>Player</th>
+            <th class="text-right">Points in round ${index + 1}</th>
+            <th class="text-right">Distance</th>
+</tr>
+${players.map(createRoundRow).join('')}
+`;
+    const eliminationClass = (game, playerGame) => {
+        if (!game.playedWithEliminations) return '';
+        if (playerGame.eliminatedInGame > game.gameNumber) return 'text-success';
+        if (playerGame.eliminatedInGame == game.gameNumber.toString()) return 'text-danger';
+        switch (playerGame.eliminatedInGame) {
+            case "-": return 'text-muted';
+            case "+": return 'text-primary';
+            case null: return 'text-success';
+            default: return 'text-warning';
+        }
+    }
+
+    const eliminationDescription = (game, playerGame) => {
+        switch (eliminationClass(game, playerGame)) {
+            case "text-success": return "Still in the tournament.";
+            case "text-warning": return "Eliminated in previous game.";
+            case "text-danger": return "Eliminated in this game.";
+            case "text-muted": return "Did not play game #1.";
+            case "text-primary": return "Revived in this game.";
+            default: return "";
+        }
+    }
+
+    const roundPointsInGame = (games, gameIndex, playerInTournament) => {
+        var gameNumber = gameIndex + 1;
+        var game = games.filter(x => x.gameNumber === gameNumber)[0];
+        var p = game.playerGames.filter(x => x.playerId === playerInTournament.playerId)[0];
+        return p ? [p.r1.points, p.r2.points, p.r3.points, p.r4.points, p.r5.points] : [];
+    };
+
+    const totalPointsExtraInfo = (playerInTournament, games) => {
+        var allRoundPoints = games.map((x, i) => roundPointsInGame(games, i, playerInTournament)).flat();
+        var gamePoints = playerInTournament.games.map(x => x.gamePoints);
+        return `Avg game: ${average(gamePoints)}
+Overall avg round: ${average(allRoundPoints)}
+
+Game std.dev: ${standardDeviation(gamePoints)}
+Overall round std.dev: ${standardDeviation(allRoundPoints)}`;
+    }
+
+    const gameExtraInfo = (games, gameIndex, playerInTournament) => {
+        const roundPoints = roundPointsInGame(games, gameIndex, playerInTournament);
+        if (roundPoints.length === 0) return '';
+        return `Average round: ${average(roundPoints)}
+
+Round std.dev: ${standardDeviation(roundPoints)}`;
+    }
+
+    const highLightClass = playerGame => filteredPlayerIds.includes(playerGame.playerId) ? "bg-light text-dark" : "";
+
+    const playerPinImage = pinUrl => `<img style="height: 24px" class="rounded" src="${fullPinUrl(pinUrl)}" />`;
+
+    const timeText = time => `<br><span class="text-muted" style="font-size: 10px">${time} sec.</span>`;
+
+    const createGameRow = (game, playerGame, index) => `
+<tr class="${highLightClass(playerGame)} align-middle" onclick="togglePlayer(${game.gameNumber}, '${playerGame.playerId}')">
+            <td class="text-right align-middle">${index + 1}</td>
+            <td class="text-center align-middle">${playerPinImage(playerGame.pinUrl)}</td>
+            <td class="${eliminationClass(game, playerGame)} align-middle" title="${eliminationDescription(game, playerGame)}">${playerGame.player}</td>
+${game.playedWithEliminations ? `<td class="text-right align-middle">${playerGame.eliminatedInGame || ''}</td>` : ''}
+            <td class="text-right">${numberFormat.format(playerGame.points)}${timeText(playerGame.totalTime)}</td>
+            <td class="text-right">${numberFormat.format(playerGame.r1.points)}${timeText(playerGame.r1.time)}</td>
+            <td class="text-right">${numberFormat.format(playerGame.r2.points)}${timeText(playerGame.r2.time)}</td>
+            <td class="text-right">${numberFormat.format(playerGame.r3.points)}${timeText(playerGame.r3.time)}</td>
+            <td class="text-right">${numberFormat.format(playerGame.r4.points)}${timeText(playerGame.r4.time)}</td>
+            <td class="text-right">${numberFormat.format(playerGame.r5.points)}${timeText(playerGame.r5.time)}</td>
+</tr>
+`;
+
+    const roundSelectedClass = (gameNumber, roundIndex) => {
+        const roundSeleted = lastRoundIndexSelected[gameNumber];
+        return roundSeleted === roundIndex ? "bg-light" : "";
+    };
+
+    const createGameTable = game => `
+<table class="table table-dark table-sm" style="line-height: 12px;">
+            <tr>
+                <th class="text-right align-middle">#</th>
+                <th class="align-middle"></th>
+                <th class="align-middle">Player</th>
+                ${game.playedWithEliminations ? '<th class="text-right align-middle">Eliminated</th>' : ''}
+                <th class="text-right align-middle">Points</th>
+                <th class="text-center cursor-pointer align-middle ${roundSelectedClass(game.gameNumber, 0)}" onclick="viewRound(${game.gameNumber}, 0)"><button class="btn btn-sm btn-outline-primary">R1</button>${createFlagLocationLink(game.answers[0])}</th>
+                <th class="text-center cursor-pointer align-middle ${roundSelectedClass(game.gameNumber, 1)}" onclick="viewRound(${game.gameNumber}, 1)"><button class="btn btn-sm btn-outline-primary">R2</button>${createFlagLocationLink(game.answers[1])}</th>
+                <th class="text-center cursor-pointer align-middle ${roundSelectedClass(game.gameNumber, 2)}" onclick="viewRound(${game.gameNumber}, 2)"><button class="btn btn-sm btn-outline-primary">R3</button>${createFlagLocationLink(game.answers[2])}</th>
+                <th class="text-center cursor-pointer align-middle ${roundSelectedClass(game.gameNumber, 3)}" onclick="viewRound(${game.gameNumber}, 3)"><button class="btn btn-sm btn-outline-primary">R4</button>${createFlagLocationLink(game.answers[3])}</th>
+                <th class="text-center cursor-pointer align-middle ${roundSelectedClass(game.gameNumber, 4)}" onclick="viewRound(${game.gameNumber}, 4)"><button class="btn btn-sm btn-outline-primary">R5</button>${createFlagLocationLink(game.answers[4])}</th>
+            </tr>
+${game.playerGames.map((pg, i) => createGameRow(game, pg, i)).join('')}
+</table>
+`;
+
+    const createGame = game => `
+<div class="row">
+    <div class="alert alert-dark col-3 mx-3 text-center" role="alert">
+      Game ${game.gameNumber} - <a class="alert-link" href="${game.gameUrl}" target="_blank" rel="noreferrer noopener">${game.mapName}</a> - ${game.gameDescription}
+    </div>
+</div>
+<div class="row">
+            <div id="game-table-${game.gameNumber}" class="col-5">
+                ${createGameTable(game)}
+            </div>
+            <div class="col-7">
+                <div class="map col-12" id="mapid-game-${game.gameNumber}-round-0" style="display: none;"></div>
+                <div class="map col-12" id="mapid-game-${game.gameNumber}-round-1" style="display: none;"></div>
+                <div class="map col-12" id="mapid-game-${game.gameNumber}-round-2" style="display: none;"></div>
+                <div class="map col-12" id="mapid-game-${game.gameNumber}-round-3" style="display: none;"></div>
+                <div class="map col-12" id="mapid-game-${game.gameNumber}-round-4" style="display: none;"></div>
+                <table class="table table-dark table-sm col-7 my-4" id="table-round-game-${game.gameNumber}"></table>
+            </div>
+</div>
+`;
+    const createTournamentTableRow = (playerInTournament, index) => `
+<tr>
+            <td class="text-right">${index + 1}</td>
+            <td>${playerInTournament.playerName}</td>
+            <td class="text-right" title="${totalPointsExtraInfo(playerInTournament, games)}">${numberFormat.format(playerInTournament.totalPoints)}</td>
+${playerInTournament.games.map((x, i) => `<td class="text-right" title="${gameExtraInfo(games, i, playerInTournament)}">${x.gamePoints === null ? "-" : numberFormat.format(x.gamePoints)}</td>`).join('')}
+</tr>
+`;
+    const createTournamentTable = tournament => `
+<div class="row">
+        <table class="table table-dark table-sm col-${Math.min(12, Math.max(4, tournament.players[0].games.length))}">
+            <tr>
+                <th class="text-right">Overall position</th>
+                <th>Player</th>
+                <th class="text-right">Total points</th>
+${tournament.players[0].games.map((_, i) => `<th class="text-right">Game ${i + 1}</th>`).join('')}
+            </tr>
+${tournament.players.map(createTournamentTableRow).join('')}
+        </table>
+</div>
+`;
+
+    const createToggleTournamentTotalScore = () => `
+<div class="row">
+    <div class="alert alert-dark col-3 mx-3 text-center" role="alert">
+      <a class="alert-link" href="${new URL(window.location).href + "&total=true"}">View with total scores</a>
+    </div>
+</div>
+`;
+
+
+    function createGlobalNumberIcon() {
+        L.HtmlDivIcon = L.Icon.extend({
+            options: {
+                iconUrl: '',
+                innerHtml: '',
+                shadowUrl: null,
+                iconSize: new L.Point(21, 25),
+                iconAnchor: new L.Point(12, 25),
+                popupAnchor: new L.Point(0, -25),
+                className: 'leaflet-div-icon',
+                playerId: ''
+            },
+
+            createIcon: function () {
+                var div = document.createElement('div');
+                var img = this._createImg(this.options['iconUrl']);
+                img.style = "height: 25px;";
+                var numdiv = document.createElement('div');
+                numdiv.setAttribute("class", "number");
+                numdiv.innerHTML = this.options['innerHtml'] || '';
+                div.appendChild(img);
+                div.appendChild(numdiv);
+                this._setIconStyles(div, 'icon');
+                return div;
+            }
+        });
+    }
+</script>
+</body>
+</html>
