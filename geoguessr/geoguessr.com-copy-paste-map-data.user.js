@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         Copy/paste Geoguessr map data
 // @namespace    slashP
-// @version      2.1.2
-// @description  Copy latitude, longitude, heading and pitch information from Geoguessr maps as JSON data. Add locations to maps by pasting JSON data in map maker.
+// @version      2.3.0
+// @description  Copy latitude, longitude, heading, pitch and zoom information from Geoguessr maps as JSON data. Add or replace locations in maps by pasting JSON data or Google Maps link(s) in map maker.
 // @author       slashP
 // @match        https://www.geoguessr.com/*
+// @updateURL    https://openuserjs.org/meta/slashP/Copypaste_Geoguessr_map_data.meta.js
 // @license       MIT
 // ==/UserScript==
 
@@ -24,10 +25,14 @@
     { html: addLocationsButtonHtml, containerSelector: ".container__content" },
     { html: replaceLocationsButtonHtml, containerSelector: ".container__content" },
   ];
+  const newMapMakerContainerSelector = "[class*='sidebar_container']";
+  const isNewMapMaker = () => document.querySelector(newMapMakerContainerSelector) !== null;
+  const mapId = () => location.href.split('/').pop();
 
   const getExistingMapData = () => {
-    const mapId = location.href.split('/').pop();
-    return fetch(`/api/v3/profiles/maps/${mapId}`)
+    const url = isNewMapMaker() ? `https://www.geoguessr.com/api/v4/user-maps/drafts/${mapId()}` : `https://www.geoguessr.com/api/v3/profiles/maps/${mapId()}`;
+    const coordinatesPropertyName = isNewMapMaker() ? "coordinates" : "customCoordinates";
+    return fetch(url)
       .then(response => response.json())
       .then(map => ({
         id: map.id,
@@ -36,7 +41,7 @@
         avatar: map.avatar,
         highlighted: map.highlighted,
         published: map.published,
-        customCoordinates: map.customCoordinates
+        customCoordinates: map[coordinatesPropertyName]
       }));
   }
   const uniqueBy = (arr, selector) => {
@@ -75,10 +80,52 @@
   }
   let mapDataFromClipboard = null;
   let existingMap = null;
+  const isFullStreetViewUrl = url => url.match(/https:\/\/www\.google\.[a-z.]+\/maps\/@/) !== null;
   const importLocationsFromClipboard = () => {
     navigator.clipboard.readText().then(text => {
-      importLocations(text)
+      if (isFullStreetViewUrl(text)) {
+        importSingleLocationFromLinkInClipboard(text);
+      } else {
+        importLocations(text);
+      }
     });
+  }
+  const importSingleLocationFromLinkInClipboard = (linkText) => {
+    const links = linkText.split('\n');
+    const extractNumberFromParameter = (url, param) => parseFloat(url.split(",").slice(2).filter(x => x.indexOf(param) !== -1)[0]);
+    let coordinates = [];
+    for (let link of links) {
+      if (!isFullStreetViewUrl(link)) {
+        continue;
+      }
+
+      const lng = parseFloat(link.split(",")[1]);
+      const lat = parseFloat(link.split(",")[0].split("@")[1]);
+      const heading = extractNumberFromParameter(link, "h");
+      const zoom = (90 - extractNumberFromParameter(link, "y")) / 90 * 2.75; // guesstimated "max" value.
+      const pitch = extractNumberFromParameter(link, "t") - 90;
+      const panoId = link.split("!1s")[1].split("!2e")[0];
+      if (!lng || !lat || !heading || !panoId) {
+        continue;
+      }
+
+      const coordinate = {
+        heading: heading,
+        pitch: pitch || 0,
+        zoom: zoom || 0,
+        panoId: panoId,
+        countryCode: null,
+        stateCode: null,
+        lat: lat,
+        lng: lng
+      };
+      coordinates.push(coordinate);
+    }
+
+    const mapText = JSON.stringify({
+      customCoordinates: coordinates
+    });
+    importLocations(mapText);
   }
   const setImportLocationsFeedbackText = text => { document.getElementById("importLocationsFeedback").innerText = text; }
 
@@ -128,11 +175,14 @@
 <span style="color: green;">${numberOfLocationsNotInExistingMap} ${pluralize("addition", numberOfLocationsNotInExistingMap)}</span><br>
 <span style="color: cornflowerblue;">${numberOfLocationEditions} ${pluralize("edition", numberOfLocationEditions)} (different heading/pitch)</span><br>
 <span style="color: coral;">${numberOfExactlyMatchingLocations} exactly same</span>`;
-          document.getElementById("replaceLocationsSection").style.display = "block";
+          document.getElementById("replaceLocationsSection").style.display = numberOfUniqueLocationsImported >= 5 ? "block" : "none";
 
           document.getElementById("importLocationsFromClipboardSection").style.display = "none";
           document.getElementById("importLocationsFromFileSection").style.display = "none";
-        }).catch(error => setImportLocationsFeedbackText("Invalid map data. " + error));
+        }).catch(error => {
+          setImportLocationsFeedbackText("Invalid map data. " + error)
+          console.error(error);
+        });
     } catch (err) {
       console.log(err);
       setImportLocationsFeedbackText("Invalid map data. " + err);
@@ -168,8 +218,10 @@
   }
 
   function updateMap(newMap, setFeedback) {
-    fetch(`/api/v3/profiles/maps/${existingMap.id}`, {
-      method: 'POST',
+    const url = isNewMapMaker() ? `https://www.geoguessr.com/api/v4/user-maps/drafts/${mapId()}` : `https://www.geoguessr.com/api/v3/profiles/maps/${mapId()}`;
+    const httpMethod =  isNewMapMaker() ? 'PUT' : 'POST';
+    fetch(url, {
+      method: httpMethod,
       credentials: 'same-origin',
       headers: {
         'Content-Type': 'application/json'
@@ -182,7 +234,7 @@
       }
       return response.json();
     }).then(mapResponse => {
-      if (mapResponse.id) {
+      if (mapResponse.id || mapResponse.message === "OK") {
         setFeedback(`Map updated. Reloading page in 5 seconds.`);
         setTimeout(() => {
           window.location.reload();
@@ -228,9 +280,38 @@
     })
   }
 
+  const style = document.createElement('style');
+  style.innerHTML = `
+      .copy-paste-container {
+        position: absolute;
+        bottom: 0;
+        padding: 20px;
+      }
+    `;
+  document.head.appendChild(style);
   const tryAddButtons = () => {
     setTimeout(() => {
-      if (new RegExp('^https:\/\/www.geoguessr.com\/map-maker/').test(window.location.href)) {
+      if (new RegExp('^https:\/\/www.geoguessr.com\/map-maker/').test(window.location.href) && isNewMapMaker()) {
+        const buttonParentElement = document.createElement("div");
+        document.querySelector(newMapMakerContainerSelector).appendChild(buttonParentElement);
+        buttonParentElement.classList.add("copy-paste-container");
+
+        for (let button of buttons) {
+          const buttonElement = document.createElement("span");
+          buttonElement.innerHTML = button.html;
+          buttonParentElement.appendChild(buttonElement);
+        }
+        document.getElementById("copyMapData").onclick = copyMapData;
+        document.getElementById("downloadMapData").onclick = downloadMapData;
+        document.getElementById("importLocationsFromClipboard").onclick = importLocationsFromClipboard;
+        document.getElementById("importLocationsFromFile").addEventListener("change", handleFileImportChanged, false);
+        document.getElementById("addLocations").onclick = addLocations;
+        document.getElementById("replaceLocations").onclick = replaceLocations;
+
+        document.addEventListener('paste', e => {
+          importLocationsFromClipboard();
+        });
+      } else if (new RegExp('^https:\/\/www.geoguessr.com\/map-maker/').test(window.location.href)) {
         for (let button of buttons) {
           const buttonElement = document.createElement("span");
           buttonElement.innerHTML = button.html;
@@ -242,6 +323,10 @@
         document.getElementById("importLocationsFromFile").addEventListener("change", handleFileImportChanged, false);
         document.getElementById("addLocations").onclick = addLocations;
         document.getElementById("replaceLocations").onclick = replaceLocations;
+
+        document.addEventListener('paste', e => {
+          importLocationsFromClipboard();
+        });
       }
     }, 250);
   }
