@@ -4,6 +4,7 @@
 // @version      2.4.0
 // @description  Copy latitude, longitude, heading, pitch and zoom information from Geoguessr maps as JSON data. Add or replace locations in maps by pasting JSON data or Google Maps link(s) in map maker.
 // @author       slashP
+// @require https://greasyfork.org/scripts/460322-geoguessr-styles-scan/code/Geoguessr%20Styles%20Scan.js?version=1151668
 // @match        https://www.geoguessr.com/*
 // @updateURL    https://openuserjs.org/meta/slashP/Copypaste_Geoguessr_map_data.meta.js
 // @license       MIT
@@ -11,19 +12,25 @@
 
 (function () {
   'use strict';
-  const copyMapDataButtonHtml = '<button id="copyMapData" style="margin-left: 1rem;" class="button button--medium button--secondary margin--left-small" type="button"><span class="button__animation"></span><span class="button__label">Copy map data to clipboard</span></button>';
-  const downloadMapDataButtonHtml = '<button id="downloadMapData" style="margin-left: 1rem;" class="button button--medium button--secondary margin--left-small" type="button"><span class="button__animation"></span><span class="button__label">Download map data</span></button><span style="margin-left: 10px;" id="copyMapDataFeedback"></span>';
-  const importLocationsFromClipboardButtonHtml = '<div class="center-content" id="importLocationsFromClipboardSection"><button id="importLocationsFromClipboard" style="margin-top: 50px;" class="button button--medium button--secondary margin--left-small" type="button"><span class="button__animation"></span><span class="button__label">Try importing locations from clipboard data</span></button></span></div>';
-  const importLocationsFromFileInputHtml = '<div class="center-content" id="importLocationsFromFileSection"><label for="importLocationsFromFile">Try importing locations from file(s)</label><input accept="application/json,text/plain,text/csv" multiple type="file" id="importLocationsFromFile" style="margin-top: 50px;" class="button button--medium button--secondary margin--left-small" type="button"><span class="button__animation"></span><span class="button__label"></span></button></span><span style="margin-left: 10px;" id="importLocationsFeedback"></span></div>';
-  const addLocationsButtonHtml = '<div class="center-content" id="addLocationsSection" style="margin-top: 50px; display: none;"><span id="saveExplanation"></span><br /><div style="margin-top: 30px;"><button id="addLocations" class="button button--medium button--danger margin--left-small" type="button"><span class="button__animation"></span><span class="button__label">Add locations and save map</span></button><span style="margin-left: 10px;" id="addLocationsFeedback"></span></div></div>';
-  const replaceLocationsButtonHtml = '<div class="center-content" id="replaceLocationsSection" style="margin-top: 50px; display: none;"><span id="replaceLocationsExplanation"></span><br /><div style="margin-top: 30px;"><button id="replaceLocations" class="button button--medium button--danger margin--left-small" type="button"><span class="button__animation"></span><span class="button__label">Replace locations and save map</span></button><span style="margin-left: 10px;" id="replaceLocationsFeedback"></span></div></div>';
+  let buttonClassName = '';
+  let smallButtonClassName = '';
+  let primaryButtonClassName = '';
+  let secondaryButtonClassName = '';
+  let dangerButtonClassName = '';
+  const copyDownloadMapDataButtonHtml = () => `<div class="center-content">
+  <button id="copyMapData" style="margin-left: 1rem;" class="${buttonClassName} ${secondaryButtonClassName} ${smallButtonClassName}" type="button"><span class="button__animation"></span><span class="button__label">Copy map data to clipboard</span></button>
+  <button id="downloadMapData" style="margin-left: 1rem;" class="${buttonClassName} ${secondaryButtonClassName} ${smallButtonClassName}" type="button"><span class="button__animation"></span><span class="button__label">Download map data</span></button><span style="margin-left: 10px;" id="copyMapDataFeedback"></span>
+  </div>`;
+  const importLocationsFromClipboardButtonHtml = () => `<div class="center-content" id="importLocationsFromClipboardSection"><button id="importLocationsFromClipboard" style="margin-top: 50px;" class="${buttonClassName} ${secondaryButtonClassName} ${smallButtonClassName}" type="button"><span class="button__animation"></span><span class="button__label">Try importing locations from clipboard data</span></button></span></div>`;
+  const importLocationsFromFileInputHtml = () => `<div class="center-content" id="importLocationsFromFileSection"><label for="importLocationsFromFile">Try importing locations from file(s)</label><input accept="application/json,text/plain,text/csv" multiple type="file" id="importLocationsFromFile" style="margin-top: 50px;" class="${buttonClassName} ${secondaryButtonClassName} ${smallButtonClassName}" type="button"><span class="button__animation"></span><span class="button__label"></span></button></span><span style="margin-left: 10px;" id="importLocationsFeedback"></span></div>`;
+  const addLocationsButtonHtml = () => `<div class="center-content" id="addLocationsSection" style="margin-top: 50px; display: none;"><span id="saveExplanation"></span><br /><div style="margin-top: 30px;"><button id="addLocations" class="${buttonClassName} ${primaryButtonClassName} ${smallButtonClassName}" type="button"><span class="button__animation"></span><span class="button__label">Add locations and save map</span></button><span style="margin-left: 10px;" id="addLocationsFeedback"></span></div></div>`;
+  const replaceLocationsButtonHtml = () => `<div class="center-content" id="replaceLocationsSection" style="margin-top: 50px; display: none;"><span id="replaceLocationsExplanation"></span><br /><div style="margin-top: 30px;"><button id="replaceLocations" class="${buttonClassName} ${dangerButtonClassName} ${smallButtonClassName}" type="button"><span class="button__animation"></span><span class="button__label">Replace locations and save map</span></button><span style="margin-left: 10px;" id="replaceLocationsFeedback"></span></div></div>`;
   const buttons = [
-    { html: copyMapDataButtonHtml, containerSelector: ".center-content" },
-    { html: downloadMapDataButtonHtml, containerSelector: ".center-content" },
-    { html: importLocationsFromClipboardButtonHtml, containerSelector: ".container__content" },
-    { html: importLocationsFromFileInputHtml, containerSelector: ".container__content" },
-    { html: addLocationsButtonHtml, containerSelector: ".container__content" },
-    { html: replaceLocationsButtonHtml, containerSelector: ".container__content" },
+    { html: copyDownloadMapDataButtonHtml },
+    { html: importLocationsFromClipboardButtonHtml },
+    { html: importLocationsFromFileInputHtml },
+    { html: addLocationsButtonHtml },
+    { html: replaceLocationsButtonHtml },
   ];
   const newMapMakerContainerSelector = "[class*='sidebar_container']";
   const mapId = () => location.href.split('/').pop();
@@ -328,15 +335,19 @@
     `;
   document.head.appendChild(style);
   const tryAddButtons = () => {
-    setTimeout(() => {
+    setTimeout(async () => {
       if (new RegExp('^https:\/\/www.geoguessr.com\/map-maker/').test(window.location.href)) {
         const buttonParentElement = document.createElement("div");
         document.querySelector(newMapMakerContainerSelector).appendChild(buttonParentElement);
         buttonParentElement.classList.add("copy-paste-container");
-
+        buttonClassName = await requireClassName("button_button__");
+        smallButtonClassName = await requireClassName("button_sizeSmall__");
+        primaryButtonClassName = await requireClassName("button_variantPrimary__");
+        secondaryButtonClassName = await requireClassName("button_variantSecondary__");
+        dangerButtonClassName = await requireClassName("button_variantDanger__");
         for (let button of buttons) {
           const buttonElement = document.createElement("span");
-          buttonElement.innerHTML = button.html;
+          buttonElement.innerHTML = button.html();
           buttonParentElement.appendChild(buttonElement);
         }
         document.getElementById("copyMapData").onclick = copyMapData;
