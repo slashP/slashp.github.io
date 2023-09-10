@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Copy/paste Geoguessr map data
 // @namespace    slashP
-// @version      2.4.0
+// @version      2.4.1
 // @description  Copy latitude, longitude, heading, pitch and zoom information from Geoguessr maps as JSON data. Add or replace locations in maps by pasting JSON data or Google Maps link(s) in map maker.
 // @author       slashP
 // @require https://greasyfork.org/scripts/460322-geoguessr-styles-scan/code/Geoguessr%20Styles%20Scan.js?version=1151668

@@ -1,0 +1,74 @@
+/* Reset default margin and padding for the whole page */
+body,
+h1,
+table {
+  margin: 0;
+  padding: 0;
+}
+
+/* Center the content on the page */
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  padding: 20px;
+}
+
+/* Style the table */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 1000px;
+  background-color: #fff;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Style table header */
+thead {
+  background-color: #f2f2f2;
+}
+
+th,
+td {
+  padding: 10px;
+  text-align: left;
+}
+
+/* Style table rows */
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+/* Style the flag icons */
+.flag-icon {
+  font-size: 24px;
+  margin-right: 5px;
+}
+
+#search {
+  padding: 10px;
+  margin: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  /* Rounded corners */
+  width: 200px;
+  /* Adjust the width as needed */
+  transition: border-color 0.3s;
+}
+
+/* Style the search box when focused */
+#search:focus {
+  outline: none;
+  border-color: #007bff;
+  /* Blue border color when focused */
+}
+
+td.location-count, th.location-count {
+  text-align: right;
+}
+
+td.country-code {
+  text-align: center;
+}
