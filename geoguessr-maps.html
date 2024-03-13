@@ -192,6 +192,11 @@
       color: #696969;
       font-weight: 500;
     }
+
+    .copy-distribution {
+      cursor: pointer;
+      padding-right: 10px;
+    }
   </style>
 </head>
 
@@ -231,6 +236,7 @@
               <option value="Continent">Continent</option>
               <option value="Country">Country</option>
               <option value="Region">Region</option>
+              <option value="Subdivision">Subdivision</option>
               <option value="Other">Other</option>
             </select>
           </div>
@@ -245,7 +251,8 @@
           </div>
         </div>
         <div class="filter credits">
-          Credits to <a href="https://www.geoguessr.com/user/5e453ea926bbda4844583ffd" target="_blank">miracle whips</a> for the code powering this page.
+          Credits to <a href="https://www.geoguessr.com/user/5e453ea926bbda4844583ffd" target="_blank">miracle whips</a>
+          for the code powering this page.
         </div>
       </div>
     </div>
@@ -273,210 +280,227 @@
   </div>
 
   <script>
-    const jsonData = [{ "mapName": "A Balanced Australia", "category": "Country", "locationCount": 60330, "link": "https://www.geoguessr.com/maps/60afb9b2dcdbe60001438fa6", "countryCode": "AU", "shortName": "ABA" }, { "mapName": "A Balanced Canada", "category": "Country", "locationCount": 60000, "link": "https://www.geoguessr.com/maps/61067f9608061c000157a851", "countryCode": "CA", "shortName": "ABC" }, { "mapName": "A Pog Japan", "category": "Country", "locationCount": 11358, "link": "https://www.geoguessr.com/maps/609fd22e103dfd000181b8c9", "countryCode": "JP", "shortName": null }, { "mapName": "An Arbitrary Africa", "category": "Continent", "locationCount": 30000, "link": "https://www.geoguessr.com/maps/60a19170089ecc0001db6609", "countryCode": null, "shortName": "AAAF" }, { "mapName": "An Arbitrary Asia", "category": "Continent", "locationCount": 50000, "link": "https://www.geoguessr.com/maps/609ef79d103dfd0001818512", "countryCode": null, "shortName": "AAAS" }, { "mapName": "An Arbitrary Europe", "category": "Continent", "locationCount": 84779, "link": "https://www.geoguessr.com/maps/60788ebfb15d750001929514", "countryCode": null, "shortName": "AAEU" }, { "mapName": "An Arbitrary Nordics", "category": null, "locationCount": 5, "link": "https://www.geoguessr.com/maps/6079a7bcf1685900015c0baf", "countryCode": null, "shortName": null }, { "mapName": "An Arbitrary North America", "category": "Continent", "locationCount": 49962, "link": "https://www.geoguessr.com/maps/609ff9e16e008a00013ef405", "countryCode": null, "shortName": "AANA" }, { "mapName": "An Arbitrary Oceania", "category": "Continent", "locationCount": 29698, "link": "https://www.geoguessr.com/maps/60a0874fa2db8d0001402c41", "countryCode": null, "shortName": "AAOC" }, { "mapName": "An Arbitrary Rural Albania (AARAL)", "category": "Country", "locationCount": 300, "link": "https://www.geoguessr.com/maps/644fd26e414764d8c6d0e863", "countryCode": "AL", "shortName": "AARAL" }, { "mapName": "An Arbitrary Rural Andorra (AARAD)", "category": "Country", "locationCount": 182, "link": "https://www.geoguessr.com/maps/644fd448385ec9758e0f5690", "countryCode": "AD", "shortName": "AARAD" }, { "mapName": "An Arbitrary Rural Argentina (AARAR)", "category": "Country", "locationCount": 88626, "link": "https://www.geoguessr.com/maps/644fce8dc223d496e4996e53", "countryCode": "AR", "shortName": "AARAR" }, { "mapName": "An Arbitrary Rural Australia (AARAU)", "category": "Country", "locationCount": 51391, "link": "https://www.geoguessr.com/maps/644fc37ac223d496e4994d63", "countryCode": "AU", "shortName": "AARAU" }, { "mapName": "An Arbitrary Rural Austria (AARAT)", "category": "Country", "locationCount": 1800, "link": "https://www.geoguessr.com/maps/644fd2526210bb0e9a80d010", "countryCode": "AT", "shortName": "AARAT" }, { "mapName": "An Arbitrary Rural Bangladesh (AARBD)", "category": "Country", "locationCount": 2863, "link": "https://www.geoguessr.com/maps/644fd24d385ec9758e0f5137", "countryCode": "BD", "shortName": "AARBD" }, { "mapName": "An Arbitrary Rural Belgium (AARBE)", "category": "Country", "locationCount": 2520, "link": "https://www.geoguessr.com/maps/644fd2626210bb0e9a80d0cc", "countryCode": "BE", "shortName": "AARBE" }, { "mapName": "An Arbitrary Rural Bhutan (AARBT)", "category": "Country", "locationCount": 113, "link": "https://www.geoguessr.com/maps/644fd42eae1b089e2ed0dba7", "countryCode": "BT", "shortName": "AARBT" }, { "mapName": "An Arbitrary Rural Bolivia (AARBO)", "category": "Country", "locationCount": 1220, "link": "https://www.geoguessr.com/maps/644fd2498f14ba85143c10cc", "countryCode": "BO", "shortName": "AARBO" }, { "mapName": "An Arbitrary Rural Botswana (AARBW)", "category": "Country", "locationCount": 3284, "link": "https://www.geoguessr.com/maps/644fd24a6210bb0e9a80d00d", "countryCode": "BW", "shortName": "AARBW" }, { "mapName": "An Arbitrary Rural Brazil (AARBR)", "category": "Country", "locationCount": 69429, "link": "https://www.geoguessr.com/maps/644fbd1b8f14ba85143bddb2", "countryCode": "BR", "shortName": "AARBR" }, { "mapName": "An Arbitrary Rural Bulgaria (AARBG)", "category": "Country", "locationCount": 5864, "link": "https://www.geoguessr.com/maps/644fd258ef64f0dbc532f941", "countryCode": "BG", "shortName": "AARBG" }, { "mapName": "An Arbitrary Rural Cambodia (AARKH)", "category": "Country", "locationCount": 7293, "link": "https://www.geoguessr.com/maps/644fd1d54e7101c24fc8838c", "countryCode": "KH", "shortName": "AARKH" }, { "mapName": "An Arbitrary Rural Canada (AARCA)", "category": "Country", "locationCount": 48663, "link": "https://www.geoguessr.com/maps/644fc2e99660e66902e82648", "countryCode": "CA", "shortName": "AARCA" }, { "mapName": "An Arbitrary Rural Chile (AARCL)", "category": "Country", "locationCount": 11152, "link": "https://www.geoguessr.com/maps/644fd02bae1b089e2ed0ced8", "countryCode": "CL", "shortName": "AARCL" }, { "mapName": "An Arbitrary Rural Christmas Island (AARCX)", "category": "Country", "locationCount": 87, "link": "https://www.geoguessr.com/maps/644fd44f385ec9758e0f5696", "countryCode": "CX", "shortName": "AARCX" }, { "mapName": "An Arbitrary Rural Colombia (AARCO)", "category": "Country", "locationCount": 52255, "link": "https://www.geoguessr.com/maps/644fd156ef64f0dbc532f3f6", "countryCode": "CO", "shortName": "AARCO" }, { "mapName": "An Arbitrary Rural Croatia (AARHR)", "category": "Country", "locationCount": 3512, "link": "https://www.geoguessr.com/maps/644fd24891361aa1699ad9ce", "countryCode": "HR", "shortName": "AARHR" }, { "mapName": "An Arbitrary Rural Cura\u00E7ao (AARCW)", "category": "Country", "locationCount": 81, "link": "https://www.geoguessr.com/maps/644fd4383a2c476efcc54421", "countryCode": "CW", "shortName": "AARCW" }, { "mapName": "An Arbitrary Rural Czechia (AARCZ)", "category": "Country", "locationCount": 2586, "link": "https://www.geoguessr.com/maps/644fd25fef64f0dbc532f946", "countryCode": "CZ", "shortName": "AARCZ" }, { "mapName": "An Arbitrary Rural Denmark (AARDK)", "category": "Country", "locationCount": 2278, "link": "https://www.geoguessr.com/maps/644fd25ddf1a7f389d82c163", "countryCode": "DK", "shortName": "AARDK" }, { "mapName": "An Arbitrary Rural Ecuador (AAREC)", "category": "Country", "locationCount": 2906, "link": "https://www.geoguessr.com/maps/644fd243553dc436d234d94e", "countryCode": "EC", "shortName": "AAREC" }, { "mapName": "An Arbitrary Rural Estonia (AAREE)", "category": "Country", "locationCount": 4312, "link": "https://www.geoguessr.com/maps/644fd2673a2c476efcc540c9", "countryCode": "EE", "shortName": "AAREE" }, { "mapName": "An Arbitrary Rural Eswatini (AARSZ)", "category": "Country", "locationCount": 696, "link": "https://www.geoguessr.com/maps/644fd26ddf1a7f389d82c191", "countryCode": "SZ", "shortName": "AARSZ" }, { "mapName": "An Arbitrary Rural Europe (AAREU)", "category": "Continent", "locationCount": 79606, "link": "https://www.geoguessr.com/maps/64f33f3e575dc70f2eea7004", "countryCode": null, "shortName": "AAEU" }, { "mapName": "An Arbitrary Rural Faroe Islands (AARFO)", "category": "Country", "locationCount": 175, "link": "https://www.geoguessr.com/maps/644fd431014985a0720c264c", "countryCode": "FO", "shortName": "AARFO" }, { "mapName": "An Arbitrary Rural Finland (AARFI)", "category": "Country", "locationCount": 29455, "link": "https://www.geoguessr.com/maps/644fd240553dc436d234d94b", "countryCode": "FI", "shortName": "AARFI" }, { "mapName": "An Arbitrary Rural France (AARFR)", "category": "Country", "locationCount": 6782, "link": "https://www.geoguessr.com/maps/644fd17a3a2c476efcc53ed0", "countryCode": "FR", "shortName": "AARFR" }, { "mapName": "An Arbitrary Rural Germany (AARDE)", "category": null, "locationCount": 20966, "link": "https://www.geoguessr.com/maps/64c6b403d7605752ecad7ab3", "countryCode": null, "shortName": null }, { "mapName": "An Arbitrary Rural Ghana (AARGH)", "category": "Country", "locationCount": 2866, "link": "https://www.geoguessr.com/maps/644fd244352c65cb4e46304e", "countryCode": "GH", "shortName": "AARGH" }, { "mapName": "An Arbitrary Rural Greece (AARGR)", "category": "Country", "locationCount": 4275, "link": "https://www.geoguessr.com/maps/644fd1ce414764d8c6d0e538", "countryCode": "GR", "shortName": "AARGR" }, { "mapName": "An Arbitrary Rural Guam (AARGU)", "category": "Country", "locationCount": 75, "link": "https://www.geoguessr.com/maps/644fd44ce728ab424d581fcf", "countryCode": "GU", "shortName": "AARGU" }, { "mapName": "An Arbitrary Rural Guatemala (AARGT)", "category": "Country", "locationCount": 848, "link": "https://www.geoguessr.com/maps/644fd24ca917719b5a62bb99", "countryCode": "GT", "shortName": "AARGT" }, { "mapName": "An Arbitrary Rural Hong Kong (AARHK)", "category": "Country", "locationCount": 124, "link": "https://www.geoguessr.com/maps/644fd43e4e7101c24fc88d68", "countryCode": "HK", "shortName": "AARHK" }, { "mapName": "An Arbitrary Rural Hungary (AARHU)", "category": "Country", "locationCount": 2709, "link": "https://www.geoguessr.com/maps/644fd251385ec9758e0f51ac", "countryCode": "HU", "shortName": "AARHU" }, { "mapName": "An Arbitrary Rural Iceland (AARIS)", "category": "Country", "locationCount": 3401, "link": "https://www.geoguessr.com/maps/644fd26de7365292b9d0a931", "countryCode": "IS", "shortName": "AARIS" }, { "mapName": "An Arbitrary Rural India (AARIN)", "category": "Country", "locationCount": 814, "link": "https://www.geoguessr.com/maps/644fd43551126f44cfeeece7", "countryCode": "IN", "shortName": "AARIN" }, { "mapName": "An Arbitrary Rural Indonesia (AARID)", "category": "Country", "locationCount": 7857, "link": "https://www.geoguessr.com/maps/644fc1ef91361aa1699aaa38", "countryCode": "ID", "shortName": "AARID" }, { "mapName": "An Arbitrary Rural Ireland (AARIE)", "category": "Country", "locationCount": 2010, "link": "https://www.geoguessr.com/maps/644fd26191361aa1699ad9e5", "countryCode": "IE", "shortName": "AARIE" }, { "mapName": "An Arbitrary Rural Isle of Man (AARIM)", "category": "Country", "locationCount": 67, "link": "https://www.geoguessr.com/maps/644fd442ae1b089e2ed0dbbd", "countryCode": "IM", "shortName": "AARIM" }, { "mapName": "An Arbitrary Rural Israel (AARIL)", "category": "Country", "locationCount": 300, "link": "https://www.geoguessr.com/maps/644fd270df1a7f389d82c192", "countryCode": "IL", "shortName": "AARIL" }, { "mapName": "An Arbitrary Rural Italy (AARIT)", "category": "Country", "locationCount": 11361, "link": "https://www.geoguessr.com/maps/644fd1868f14ba85143c0c07", "countryCode": "IT", "shortName": "AARIT" }, { "mapName": "An Arbitrary Rural Japan (AARJP)", "category": "Country", "locationCount": 10924, "link": "https://www.geoguessr.com/maps/644fce9eae1b089e2ed0ca81", "countryCode": "JP", "shortName": "AARJP" }, { "mapName": "An Arbitrary Rural Jordan (AARJO)", "category": "Country", "locationCount": 300, "link": "https://www.geoguessr.com/maps/644fd26f6210bb0e9a80d0f0", "countryCode": "JO", "shortName": "AARJO" }, { "mapName": "An Arbitrary Rural Kenya (AARKE)", "category": "Country", "locationCount": 5556, "link": "https://www.geoguessr.com/maps/644fd18b51126f44cfeee36e", "countryCode": "KE", "shortName": "AARKE" }, { "mapName": "An Arbitrary Rural Kyrgyzstan (AARKG)", "category": "Country", "locationCount": 1537, "link": "https://www.geoguessr.com/maps/644fd259ae1b089e2ed0d661", "countryCode": "KG", "shortName": "AARKG" }, { "mapName": "An Arbitrary Rural Latin America (AARLATAM)", "category": null, "locationCount": 58006, "link": "https://www.geoguessr.com/maps/64f25115e26cbd4b03acd6d3", "countryCode": null, "shortName": null }, { "mapName": "An Arbitrary Rural Latvia (AARLV)", "category": "Country", "locationCount": 5926, "link": "https://www.geoguessr.com/maps/644fd2656210bb0e9a80d0d2", "countryCode": "LV", "shortName": "AARLV" }, { "mapName": "An Arbitrary Rural Lesotho (AARLS)", "category": "Country", "locationCount": 489, "link": "https://www.geoguessr.com/maps/644fd26ea917719b5a62bbe5", "countryCode": "LS", "shortName": "AARLS" }, { "mapName": "An Arbitrary Rural Lithuania (AARLT)", "category": "Country", "locationCount": 4466, "link": "https://www.geoguessr.com/maps/644fd269ae1b089e2ed0d6a3", "countryCode": "LT", "shortName": "AARLT" }, { "mapName": "An Arbitrary Rural Luxembourg (AARLU)", "category": "Country", "locationCount": 281, "link": "https://www.geoguessr.com/maps/644fd42a8f14ba85143c14eb", "countryCode": "LU", "shortName": "AARLU" }, { "mapName": "An Arbitrary Rural Malaysia (AARMY)", "category": "Country", "locationCount": 4265, "link": "https://www.geoguessr.com/maps/644fd02d91361aa1699ad335", "countryCode": "MY", "shortName": "AARMY" }, { "mapName": "An Arbitrary Rural Mexico (AARMX)", "category": "Country", "locationCount": 52829, "link": "https://www.geoguessr.com/maps/644fc5b6ef64f0dbc532c478", "countryCode": "MX", "shortName": "AARMX" }, { "mapName": "An Arbitrary Rural Mongolia (AARMN)", "category": "Country", "locationCount": 5538, "link": "https://www.geoguessr.com/maps/644fd25c385ec9758e0f51eb", "countryCode": "MN", "shortName": "AARMN" }, { "mapName": "An Arbitrary Rural Montenegro (AARME)", "category": "Country", "locationCount": 447, "link": "https://www.geoguessr.com/maps/644fd26fe7365292b9d0a935", "countryCode": "ME", "shortName": "AARME" }, { "mapName": "An Arbitrary Rural Netherlands (AARNL)", "category": "Country", "locationCount": 1647, "link": "https://www.geoguessr.com/maps/644fd260352c65cb4e463062", "countryCode": "NL", "shortName": "AARNL" }, { "mapName": "An Arbitrary Rural New Zealand (AARNZ)", "category": "Country", "locationCount": 15848, "link": "https://www.geoguessr.com/maps/644fd1a2352c65cb4e462dbe", "countryCode": "NZ", "shortName": "AARNZ" }, { "mapName": "An Arbitrary Rural Nigeria (AARNG)", "category": "Country", "locationCount": 8969, "link": "https://www.geoguessr.com/maps/644fd1b93c592665664e1943", "countryCode": "NG", "shortName": "AARNG" }, { "mapName": "An Arbitrary Rural North Macedonia (AARMK)", "category": "Country", "locationCount": 300, "link": "https://www.geoguessr.com/maps/644fd26fe7365292b9d0a938", "countryCode": "MK", "shortName": "AARMK" }, { "mapName": "An Arbitrary Rural Norway (AARNO)", "category": "Country", "locationCount": 7454, "link": "https://www.geoguessr.com/maps/6446561c4f396978a8fa0cad", "countryCode": "NO", "shortName": "AARNO" }, { "mapName": "An Arbitrary Rural Palestine, State of (AARPS)", "category": "Country", "locationCount": 127, "link": "https://www.geoguessr.com/maps/644fd427414764d8c6d0ef37", "countryCode": "PS", "shortName": "AARPS" }, { "mapName": "An Arbitrary Rural Peru (AARPE)", "category": "Country", "locationCount": 36554, "link": "https://www.geoguessr.com/maps/644fd0924e7101c24fc87d7b", "countryCode": "PE", "shortName": "AARPE" }, { "mapName": "An Arbitrary Rural Philippines (AARPH)", "category": "Country", "locationCount": 8134, "link": "https://www.geoguessr.com/maps/644fce96ef64f0dbc532e76c", "countryCode": "PH", "shortName": "AARPH" }, { "mapName": "An Arbitrary Rural Poland (AARPL)", "category": "Country", "locationCount": 5668, "link": "https://www.geoguessr.com/maps/644fd1bfef64f0dbc532f5a2", "countryCode": "PL", "shortName": "AARPL" }, { "mapName": "An Arbitrary Rural Portugal (AARPT)", "category": "Country", "locationCount": 2765, "link": "https://www.geoguessr.com/maps/644fd24be728ab424d581bfa", "countryCode": "PT", "shortName": "AARPT" }, { "mapName": "An Arbitrary Rural Romania (AARRO)", "category": "Country", "locationCount": 7182, "link": "https://www.geoguessr.com/maps/644fd1c7352c65cb4e462e8a", "countryCode": "RO", "shortName": "AARRO" }, { "mapName": "An Arbitrary Rural Russia (AARRU)", "category": "Country", "locationCount": 45639, "link": "https://www.geoguessr.com/maps/644fc1e0385ec9758e0f28f5", "countryCode": "RU", "shortName": "AARRU" }, { "mapName": "An Arbitrary Rural R\u00E9union (AARRE)", "category": "Country", "locationCount": 94, "link": "https://www.geoguessr.com/maps/644fd44551126f44cfeeecff", "countryCode": "RE", "shortName": "AARRE" }, { "mapName": "An Arbitrary Rural Senegal (AARSN)", "category": "Country", "locationCount": 2268, "link": "https://www.geoguessr.com/maps/644fd246e728ab424d581bf8", "countryCode": "SN", "shortName": "AARSN" }, { "mapName": "An Arbitrary Rural Serbia (AARRS)", "category": "Country", "locationCount": 1444, "link": "https://www.geoguessr.com/maps/644fd26b9660e66902e858a1", "countryCode": "RS", "shortName": "AARRS" }, { "mapName": "An Arbitrary Rural Slovakia (AARSK)", "category": "Country", "locationCount": 1318, "link": "https://www.geoguessr.com/maps/644fd2699660e66902e8589e", "countryCode": "SK", "shortName": "AARSK" }, { "mapName": "An Arbitrary Rural Slovenia (AARSI)", "category": "Country", "locationCount": 836, "link": "https://www.geoguessr.com/maps/644fd26b3a2c476efcc540cd", "countryCode": "SI", "shortName": "AARSI" }, { "mapName": "An Arbitrary Rural South Africa (AARZA)", "category": "Country", "locationCount": 18268, "link": "https://www.geoguessr.com/maps/644fcaad51126f44cfeec6f2", "countryCode": "ZA", "shortName": "AAAF" }, { "mapName": "An Arbitrary Rural South Korea (AARKR)", "category": "Country", "locationCount": 361, "link": "https://www.geoguessr.com/maps/644fd252e728ab424d581bfc", "countryCode": "KR", "shortName": "AARKR" }, { "mapName": "An Arbitrary Rural Southeast Asia", "category": "Continent", "locationCount": 29688, "link": "https://www.geoguessr.com/maps/64f32bc17c3224c6995423f9", "countryCode": null, "shortName": "AAAS" }, { "mapName": "An Arbitrary Rural Spain (AARES)", "category": "Country", "locationCount": 21846, "link": "https://www.geoguessr.com/maps/644fd17291361aa1699ad658", "countryCode": "ES", "shortName": "AARES" }, { "mapName": "An Arbitrary Rural Sri Lanka (AARLK)", "category": "Country", "locationCount": 2122, "link": "https://www.geoguessr.com/maps/644fd1d6ef64f0dbc532f6a3", "countryCode": "LK", "shortName": "AARLK" }, { "mapName": "An Arbitrary Rural Sweden (AARSE)", "category": "Country", "locationCount": 14954, "link": "https://www.geoguessr.com/maps/644fd1b0014985a0720c1bae", "countryCode": "SE", "shortName": "AARSE" }, { "mapName": "An Arbitrary Rural Switzerland (AARCH)", "category": "Country", "locationCount": 990, "link": "https://www.geoguessr.com/maps/644fd26aa917719b5a62bbde", "countryCode": "CH", "shortName": "AARCH" }, { "mapName": "An Arbitrary Rural Taiwan (AARTW)", "category": "Country", "locationCount": 1429, "link": "https://www.geoguessr.com/maps/644fd26adf1a7f389d82c18e", "countryCode": "TW", "shortName": "AARTW" }, { "mapName": "An Arbitrary Rural Thailand (AARTH)", "category": "Country", "locationCount": 48844, "link": "https://www.geoguessr.com/maps/644fd01fef64f0dbc532efe6", "countryCode": "TH", "shortName": "AARTH" }, { "mapName": "An Arbitrary Rural Tunisia (AARTN)", "category": "Country", "locationCount": 300, "link": "https://www.geoguessr.com/maps/644fd26f3a2c476efcc540cf", "countryCode": "TN", "shortName": "AARTN" }, { "mapName": "An Arbitrary Rural Turkey (AARTR)", "category": "Country", "locationCount": 6426, "link": "https://www.geoguessr.com/maps/644fd180553dc436d234d5f7", "countryCode": "TR", "shortName": "AARTR" }, { "mapName": "An Arbitrary Rural Uganda (AARUG)", "category": "Country", "locationCount": 427, "link": "https://www.geoguessr.com/maps/644fd270c223d496e4997ea4", "countryCode": "UG", "shortName": "AARUG" }, { "mapName": "An Arbitrary Rural Ukraine (AARUA)", "category": "Country", "locationCount": 3801, "link": "https://www.geoguessr.com/maps/644fd1cb352c65cb4e462e8b", "countryCode": "UA", "shortName": "AARUA" }, { "mapName": "An Arbitrary Rural United Arab Emirates (AARAE)", "category": "Country", "locationCount": 300, "link": "https://www.geoguessr.com/maps/644fd26e8f14ba85143c1153", "countryCode": "AE", "shortName": "AARAE" }, { "mapName": "An Arbitrary Rural United Kingdom (AARGB)", "category": "Country", "locationCount": 5582, "link": "https://www.geoguessr.com/maps/644fd188a917719b5a62b787", "countryCode": "GB", "shortName": "AARGB" }, { "mapName": "An Arbitrary Rural Uruguay (AARUY)", "category": "Country", "locationCount": 4333, "link": "https://www.geoguessr.com/maps/644fd2508f14ba85143c10d6", "countryCode": "UY", "shortName": "AARUY" }, { "mapName": "An Arbitrary Rural USA (AARUS)", "category": "Country", "locationCount": 72851, "link": "https://www.geoguessr.com/maps/6446af19652e9023e81c6f13", "countryCode": "US", "shortName": "AARUS" }, { "mapName": "An Arbitrary Rural World", "category": "World", "locationCount": 112554, "link": "https://www.geoguessr.com/maps/643dbc7ccc47d3a344307998", "countryCode": null, "shortName": "AARW" }, { "mapName": "An Arbitrary Rural \u00C5land (AARAX)", "category": "Country", "locationCount": 240, "link": "https://www.geoguessr.com/maps/644fd43b91361aa1699adf59", "countryCode": "AX", "shortName": "AARAX" }, { "mapName": "An Arbitrary South America", "category": "Continent", "locationCount": 50115, "link": "https://www.geoguessr.com/maps/608e85f537802100018242e6", "countryCode": null, "shortName": "AASA" }, { "mapName": "An Arbitrary World", "category": "World", "locationCount": 103792, "link": "https://www.geoguessr.com/maps/6089bfcff6a0770001f645dd", "countryCode": null, "shortName": "AAW" }, { "mapName": "An Arbitrary World2", "category": "World", "locationCount": 100610, "link": "https://www.geoguessr.com/maps/61578a8b36afeb0001fb6823", "countryCode": null, "shortName": "World" }, { "mapName": "Australia Only Blurry", "category": null, "locationCount": 10983, "link": "https://www.geoguessr.com/maps/608f4fac0c66b70001eb29e6", "countryCode": null, "shortName": null }, { "mapName": "Dirty Albania", "category": "Country", "locationCount": 254, "link": "https://www.geoguessr.com/maps/63f3f28c8f405d28aa488345", "countryCode": "AL", "shortName": "DAL" }, { "mapName": "Dirty Argentina", "category": "Country", "locationCount": 5018, "link": "https://www.geoguessr.com/maps/63f3c4cac5686d79ccea4623", "countryCode": "AR", "shortName": "DAR" }, { "mapName": "Dirty Australia", "category": "Country", "locationCount": 3086, "link": "https://www.geoguessr.com/maps/63f3c4e8c05a4bc09cfa6d20", "countryCode": "AU", "shortName": "DAU" }, { "mapName": "Dirty Austria", "category": "Country", "locationCount": 1014, "link": "https://www.geoguessr.com/maps/63f3f2988f405d28aa48834b", "countryCode": "AT", "shortName": "DAT" }, { "mapName": "Dirty Bangladesh", "category": "Country", "locationCount": 216, "link": "https://www.geoguessr.com/maps/63f3c4ecb14aac7cc65ed337", "countryCode": "BD", "shortName": "DBD" }, { "mapName": "Dirty Belgium", "category": "Country", "locationCount": 1020, "link": "https://www.geoguessr.com/maps/63f3f2a2c05a4bc09cfa7e1c", "countryCode": "BE", "shortName": "DBE" }, { "mapName": "Dirty Bolivia", "category": "Country", "locationCount": 1472, "link": "https://www.geoguessr.com/maps/63f3c4faf1482fc04634e95e", "countryCode": "BO", "shortName": "DBO" }, { "mapName": "Dirty Botswana", "category": "Country", "locationCount": 1527, "link": "https://www.geoguessr.com/maps/63f3c7d1be7bda29cf4872e5", "countryCode": "BW", "shortName": "DBW" }, { "mapName": "Dirty Brazil", "category": "Country", "locationCount": 15765, "link": "https://www.geoguessr.com/maps/63f3c7c7be7bda29cf4872df", "countryCode": "BR", "shortName": "DBR" }, { "mapName": "Dirty Bulgaria", "category": "Country", "locationCount": 813, "link": "https://www.geoguessr.com/maps/63f3f2a70355e40ded075a80", "countryCode": "BG", "shortName": "DBG" }, { "mapName": "Dirty Cambodia", "category": "Country", "locationCount": 1008, "link": "https://www.geoguessr.com/maps/63f3c9113d47797292c370ff", "countryCode": "KH", "shortName": "DKH" }, { "mapName": "Dirty Canada", "category": "Country", "locationCount": 5716, "link": "https://www.geoguessr.com/maps/63f3c8217a5130d3a5862815", "countryCode": "CA", "shortName": "DCA" }, { "mapName": "Dirty Chile", "category": "Country", "locationCount": 4005, "link": "https://www.geoguessr.com/maps/63f3c3c5c5686d79ccea45dc", "countryCode": "CL", "shortName": "DCL" }, { "mapName": "Dirty Colombia", "category": "Country", "locationCount": 6059, "link": "https://www.geoguessr.com/maps/63f3c870f112d1ffe3936908", "countryCode": "CO", "shortName": "DCO" }, { "mapName": "Dirty Croatia", "category": "Country", "locationCount": 1014, "link": "https://www.geoguessr.com/maps/63f3f3e3b4360c7d95dd895d", "countryCode": "HR", "shortName": "DHR" }, { "mapName": "Dirty Cura\u00E7ao", "category": "Country", "locationCount": 100, "link": "https://www.geoguessr.com/maps/63f3c8799d7cba4549096b38", "countryCode": "CW", "shortName": "DCW" }, { "mapName": "Dirty Czechia", "category": "Country", "locationCount": 604, "link": "https://www.geoguessr.com/maps/63f3f9c8010c14f9d82e875c", "countryCode": "CZ", "shortName": "DCZ" }, { "mapName": "Dirty Denmark", "category": "Country", "locationCount": 810, "link": "https://www.geoguessr.com/maps/63f3f2d53e1d57e91681d89d", "countryCode": "DK", "shortName": "DDK" }, { "mapName": "Dirty Dominican Republic", "category": "Country", "locationCount": 39, "link": "https://www.geoguessr.com/maps/63f3c87b3e3d92d6222808b5", "countryCode": "DO", "shortName": "DDO" }, { "mapName": "Dirty Ecuador", "category": "Country", "locationCount": 472, "link": "https://www.geoguessr.com/maps/63f3c877c05a4bc09cfa6e26", "countryCode": "EC", "shortName": "DEC" }, { "mapName": "Dirty Estonia", "category": "Country", "locationCount": 3570, "link": "https://www.geoguessr.com/maps/63f3f2f3f1482fc04634f99b", "countryCode": "EE", "shortName": "DEE" }, { "mapName": "Dirty Eswatini", "category": "Country", "locationCount": 300, "link": "https://www.geoguessr.com/maps/63f3ee14856cbb363401c292", "countryCode": "SZ", "shortName": "DSZ" }, { "mapName": "Dirty Faroe Islands", "category": "Country", "locationCount": 102, "link": "https://www.geoguessr.com/maps/63f3f754c5686d79ccea57cf", "countryCode": "FO", "shortName": "DFO" }, { "mapName": "Dirty Finland", "category": "Country", "locationCount": 2902, "link": "https://www.geoguessr.com/maps/63f3f3a4b4360c7d95dd894f", "countryCode": "FI", "shortName": "DFI" }, { "mapName": "Dirty France", "category": "Country", "locationCount": 2503, "link": "https://www.geoguessr.com/maps/63f3f3c53d47797292c38064", "countryCode": "FR", "shortName": "DFR" }, { "mapName": "Dirty Germany", "category": null, "locationCount": 49, "link": "https://www.geoguessr.com/maps/63f3f2d00355e40ded075a89", "countryCode": null, "shortName": null }, { "mapName": "Dirty Ghana", "category": "Country", "locationCount": 429, "link": "https://www.geoguessr.com/maps/63f3c880b4360c7d95dd7938", "countryCode": "GH", "shortName": "DGH" }, { "mapName": "Dirty Greece", "category": "Country", "locationCount": 1450, "link": "https://www.geoguessr.com/maps/63f3f3dc0355e40ded075ad9", "countryCode": "GR", "shortName": "DGR" }, { "mapName": "Dirty Greenland", "category": "Country", "locationCount": 10, "link": "https://www.geoguessr.com/maps/63f3c882856cbb363401b4f8", "countryCode": "GL", "shortName": "DGL" }, { "mapName": "Dirty Guatemala", "category": "Country", "locationCount": 504, "link": "https://www.geoguessr.com/maps/63f3c222f1482fc04634e876", "countryCode": "GT", "shortName": "DGT" }, { "mapName": "Dirty Hungary", "category": "Country", "locationCount": 1192, "link": "https://www.geoguessr.com/maps/63f3f3ebfe3c3074a04fe513", "countryCode": "HU", "shortName": "DHU" }, { "mapName": "Dirty Iceland", "category": "Country", "locationCount": 1015, "link": "https://www.geoguessr.com/maps/63f3f3f68f405d28aa4883b7", "countryCode": "IS", "shortName": "DIS" }, { "mapName": "Dirty Indonesia", "category": "Country", "locationCount": 5098, "link": "https://www.geoguessr.com/maps/63f3c8aae936acebd9491904", "countryCode": "ID", "shortName": "DID" }, { "mapName": "Dirty Ireland", "category": "Country", "locationCount": 762, "link": "https://www.geoguessr.com/maps/63f3f3f0520a3a2826fac9e9", "countryCode": "IE", "shortName": "DIE" }, { "mapName": "Dirty Israel", "category": "Country", "locationCount": 166, "link": "https://www.geoguessr.com/maps/63f3c8e23e3d92d6222808d1", "countryCode": "IL", "shortName": "DIL" }, { "mapName": "Dirty Italy", "category": "Country", "locationCount": 3441, "link": "https://www.geoguessr.com/maps/63f3f469520a3a2826faca10", "countryCode": "IT", "shortName": "DIT" }, { "mapName": "Dirty Japan", "category": "Country", "locationCount": 808, "link": "https://www.geoguessr.com/maps/63f3c8e8e936acebd9491914", "countryCode": "JP", "shortName": "DJP" }, { "mapName": "Dirty Kenya", "category": "Country", "locationCount": 3547, "link": "https://www.geoguessr.com/maps/63f3c9089a7ecd97769fc238", "countryCode": "KE", "shortName": "DKE" }, { "mapName": "Dirty Kyrgyzstan", "category": "Country", "locationCount": 156, "link": "https://www.geoguessr.com/maps/63f3c90bc5686d79ccea4769", "countryCode": "KG", "shortName": "DKG" }, { "mapName": "Dirty Laos", "category": "Country", "locationCount": 153, "link": "https://www.geoguessr.com/maps/63f3f693b4360c7d95dd8a73", "countryCode": "LA", "shortName": "DLA" }, { "mapName": "Dirty Latvia", "category": "Country", "locationCount": 5051, "link": "https://www.geoguessr.com/maps/63f3f4d8f1482fc04634fa5c", "countryCode": "LV", "shortName": "DLV" }, { "mapName": "Dirty Lesotho", "category": "Country", "locationCount": 762, "link": "https://www.geoguessr.com/maps/63f3c91f8f405d28aa48748f", "countryCode": "LS", "shortName": "DLS" }, { "mapName": "Dirty Lithuania", "category": "Country", "locationCount": 5300, "link": "https://www.geoguessr.com/maps/63f3f4a9c05a4bc09cfa7ed4", "countryCode": "LT", "shortName": "DLT" }, { "mapName": "Dirty Luxembourg", "category": "Country", "locationCount": 64, "link": "https://www.geoguessr.com/maps/63f3f4acf112d1ffe3937954", "countryCode": "LU", "shortName": "DLU" }, { "mapName": "Dirty Malaysia", "category": "Country", "locationCount": 1219, "link": "https://www.geoguessr.com/maps/63f3c9669a7ecd97769fc250", "countryCode": "MY", "shortName": "DMY" }, { "mapName": "Dirty Malta", "category": "Country", "locationCount": 60, "link": "https://www.geoguessr.com/maps/63f3f4e0b4360c7d95dd89cc", "countryCode": "MT", "shortName": "DMT" }, { "mapName": "Dirty Mexico", "category": "Country", "locationCount": 5086, "link": "https://www.geoguessr.com/maps/63f3c95dfe3c3074a04fd618", "countryCode": "MX", "shortName": "DMX" }, { "mapName": "Dirty Mongolia", "category": "Country", "locationCount": 816, "link": "https://www.geoguessr.com/maps/63f3c9248f405d28aa487494", "countryCode": "MN", "shortName": "DMN" }, { "mapName": "Dirty Montenegro", "category": "Country", "locationCount": 255, "link": "https://www.geoguessr.com/maps/63f3f4da7a5130d3a58637fc", "countryCode": "ME", "shortName": "DME" }, { "mapName": "Dirty Netherlands", "category": "Country", "locationCount": 2032, "link": "https://www.geoguessr.com/maps/63f3f985520a3a2826facb88", "countryCode": "NL", "shortName": "DNL" }, { "mapName": "Dirty New Zealand", "category": "Country", "locationCount": 2520, "link": "https://www.geoguessr.com/maps/63f3c99cd245ea5a477d80e6", "countryCode": "NZ", "shortName": "DNZ" }, { "mapName": "Dirty Nigeria", "category": "Country", "locationCount": 3058, "link": "https://www.geoguessr.com/maps/63f3c984fe3c3074a04fd62b", "countryCode": "NG", "shortName": "DNG" }, { "mapName": "Dirty North Macedonia", "category": "Country", "locationCount": 16, "link": "https://www.geoguessr.com/maps/63f3f4dda13ee3ab588d3238", "countryCode": "MK", "shortName": "DMK" }, { "mapName": "Dirty Norway", "category": "Country", "locationCount": 5599, "link": "https://www.geoguessr.com/maps/63f3f54a0355e40ded075b4c", "countryCode": "NO", "shortName": "DNO" }, { "mapName": "Dirty Peru", "category": "Country", "locationCount": 5041, "link": "https://www.geoguessr.com/maps/63f3c8ddf112d1ffe3936931", "countryCode": "PE", "shortName": "DPE" }, { "mapName": "Dirty Philippines", "category": "Country", "locationCount": 2549, "link": "https://www.geoguessr.com/maps/63f3c9b87a5130d3a58628a0", "countryCode": "PH", "shortName": "DPH" }, { "mapName": "Dirty Poland", "category": "Country", "locationCount": 4029, "link": "https://www.geoguessr.com/maps/63f3f564be7bda29cf48839e", "countryCode": "PL", "shortName": "DPL" }, { "mapName": "Dirty Portugal", "category": "Country", "locationCount": 1193, "link": "https://www.geoguessr.com/maps/63f3f56d010c14f9d82e8627", "countryCode": "PT", "shortName": "DPT" }, { "mapName": "Dirty Romania", "category": "Country", "locationCount": 3235, "link": "https://www.geoguessr.com/maps/63f3f588010c14f9d82e8632", "countryCode": "RO", "shortName": "DRO" }, { "mapName": "Dirty Russia", "category": "Country", "locationCount": 2545, "link": "https://www.geoguessr.com/maps/63f3c9dbfe3c3074a04fd647", "countryCode": "RU", "shortName": "DRU" }, { "mapName": "Dirty R\u00E9union", "category": "Country", "locationCount": 99, "link": "https://www.geoguessr.com/maps/63f3c9bafe3c3074a04fd639", "countryCode": "RE", "shortName": "DRE" }, { "mapName": "Dirty Senegal", "category": "Country", "locationCount": 1020, "link": "https://www.geoguessr.com/maps/63f3ee11856cbb363401c290", "countryCode": "SN", "shortName": "DSN" }, { "mapName": "Dirty Serbia", "category": "Country", "locationCount": 404, "link": "https://www.geoguessr.com/maps/63f3f58d856cbb363401c53e", "countryCode": "RS", "shortName": "DRS" }, { "mapName": "Dirty Slovakia", "category": "Country", "locationCount": 743, "link": "https://www.geoguessr.com/maps/63f3f6790355e40ded075ba5", "countryCode": "SK", "shortName": "DSK" }, { "mapName": "Dirty Slovenia", "category": "Country", "locationCount": 3017, "link": "https://www.geoguessr.com/maps/63f3f673f112d1ffe39379ed", "countryCode": "SI", "shortName": "DSI" }, { "mapName": "Dirty South Africa", "category": "Country", "locationCount": 3290, "link": "https://www.geoguessr.com/maps/63f3f288f112d1ffe39378a2", "countryCode": "ZA", "shortName": "DZA" }, { "mapName": "Dirty South Korea", "category": "Country", "locationCount": 102, "link": "https://www.geoguessr.com/maps/63f3c914d245ea5a477d80a9", "countryCode": "KR", "shortName": "DKR" }, { "mapName": "Dirty Spain", "category": "Country", "locationCount": 6012, "link": "https://www.geoguessr.com/maps/63f3f3627a5130d3a5863767", "countryCode": "ES", "shortName": "DES" }, { "mapName": "Dirty Sri Lanka", "category": "Country", "locationCount": 1010, "link": "https://www.geoguessr.com/maps/63f3c91a7a5130d3a5862869", "countryCode": "LK", "shortName": "DLK" }, { "mapName": "Dirty Sweden", "category": "Country", "locationCount": 6087, "link": "https://www.geoguessr.com/maps/63f3f6580355e40ded075b92", "countryCode": "SE", "shortName": "DSE" }, { "mapName": "Dirty Switzerland", "category": "Country", "locationCount": 1411, "link": "https://www.geoguessr.com/maps/63f3f2b27a5130d3a586372c", "countryCode": "CH", "shortName": "DCH" }, { "mapName": "Dirty Taiwan", "category": "Country", "locationCount": 504, "link": "https://www.geoguessr.com/maps/63f3f113d245ea5a477d8fb7", "countryCode": "TW", "shortName": "DTW" }, { "mapName": "Dirty Thailand", "category": "Country", "locationCount": 15297, "link": "https://www.geoguessr.com/maps/63f3f10f3e1d57e91681d80d", "countryCode": "TH", "shortName": "DTH" }, { "mapName": "Dirty Turkey", "category": "Country", "locationCount": 1529, "link": "https://www.geoguessr.com/maps/63f3f6850355e40ded075ba6", "countryCode": "TR", "shortName": "DTR" }, { "mapName": "Dirty Uganda", "category": "Country", "locationCount": 345, "link": "https://www.geoguessr.com/maps/63f3f11a8f405d28aa4882e4", "countryCode": "UG", "shortName": "DUG" }, { "mapName": "Dirty Ukraine", "category": "Country", "locationCount": 1530, "link": "https://www.geoguessr.com/maps/63f3f691c05a4bc09cfa7f5a", "countryCode": "UA", "shortName": "DUA" }, { "mapName": "Dirty United Arab Emirates", "category": "Country", "locationCount": 153, "link": "https://www.geoguessr.com/maps/63f3c4a5b4360c7d95dd77b4", "countryCode": "AE", "shortName": "DAE" }, { "mapName": "Dirty United Kingdom", "category": "Country", "locationCount": 1897, "link": "https://www.geoguessr.com/maps/63f3f3d2d245ea5a477d90b3", "countryCode": "GB", "shortName": "DGB" }, { "mapName": "Dirty Uruguay", "category": "Country", "locationCount": 806, "link": "https://www.geoguessr.com/maps/63f3f261010c14f9d82e84e3", "countryCode": "UY", "shortName": "DUY" }, { "mapName": "Dirty USA", "category": "Country", "locationCount": 12059, "link": "https://www.geoguessr.com/maps/63f3f25cd245ea5a477d902f", "countryCode": "US", "shortName": "DUS" }, { "mapName": "Dirty World", "category": "World", "locationCount": 79753, "link": "https://www.geoguessr.com/maps/63f3ff1e0355e40ded075e0c", "countryCode": null, "shortName": "World" }, { "mapName": "Dirty \u00C5land", "category": "Country", "locationCount": 127, "link": "https://www.geoguessr.com/maps/63f3f29a3d47797292c37ff7", "countryCode": "AX", "shortName": "DAX" }, { "mapName": "IntersectionGuessr", "category": "World", "locationCount": 100000, "link": "https://www.geoguessr.com/maps/61325442eadbec00018b6385", "countryCode": null, "shortName": null }, { "mapName": "IntersectionGuessr - Albania", "category": "Country", "locationCount": 5350, "link": "https://www.geoguessr.com/maps/6149005b0a235900019e4571", "countryCode": "AL", "shortName": "ISGAL" }, { "mapName": "IntersectionGuessr - Argentina", "category": "Country", "locationCount": 20159, "link": "https://www.geoguessr.com/maps/612d482b6eba2c000111b99b", "countryCode": "AR", "shortName": "ISGAR" }, { "mapName": "IntersectionGuessr - Australia", "category": "Country", "locationCount": 30000, "link": "https://www.geoguessr.com/maps/614748b2f5f26100019e4e90", "countryCode": "AU", "shortName": "ISGAU" }, { "mapName": "IntersectionGuessr - Belgium", "category": "Country", "locationCount": 29998, "link": "https://www.geoguessr.com/maps/60abde927d6ac000015caec8", "countryCode": "BE", "shortName": "ISGBE" }, { "mapName": "IntersectionGuessr - Bolivia", "category": "Country", "locationCount": 5337, "link": "https://www.geoguessr.com/maps/612d4671cb9f290001b786ad", "countryCode": "BO", "shortName": "ISGBO" }, { "mapName": "IntersectionGuessr - Brazil", "category": "Country", "locationCount": 50046, "link": "https://www.geoguessr.com/maps/612d4ba8823d5700011eabd7", "countryCode": "BR", "shortName": "ISGBR" }, { "mapName": "IntersectionGuessr - California", "category": null, "locationCount": 30113, "link": "https://www.geoguessr.com/maps/61476b6d6d19c400018156f1", "countryCode": null, "shortName": null }, { "mapName": "IntersectionGuessr - Canada", "category": "Country", "locationCount": 99506, "link": "https://www.geoguessr.com/maps/6110358df4c8220001e87a12", "countryCode": "CA", "shortName": "ISGCA" }, { "mapName": "IntersectionGuessr - Chile", "category": "Country", "locationCount": 10425, "link": "https://www.geoguessr.com/maps/6175dc5a646a030001c3fb61", "countryCode": "CL", "shortName": "ISGCL" }, { "mapName": "IntersectionGuessr - Colombia", "category": "Country", "locationCount": 20284, "link": "https://www.geoguessr.com/maps/612d3fb56962f50001af35c2", "countryCode": "CO", "shortName": "ISGCO" }, { "mapName": "IntersectionGuessr - Czechia", "category": "Country", "locationCount": 49907, "link": "https://www.geoguessr.com/maps/60ca2da133004c000105d1fd", "countryCode": "CZ", "shortName": "ISGCZ" }, { "mapName": "IntersectionGuessr - Denmark", "category": "Country", "locationCount": 30027, "link": "https://www.geoguessr.com/maps/60cbc46e7abe710001f6fcc2", "countryCode": "DK", "shortName": "ISGDK" }, { "mapName": "IntersectionGuessr - Ecuador", "category": "Country", "locationCount": 15134, "link": "https://www.geoguessr.com/maps/612d41e927b9010001c4876e", "countryCode": "EC", "shortName": "ISGEC" }, { "mapName": "IntersectionGuessr - France", "category": "Country", "locationCount": 99302, "link": "https://www.geoguessr.com/maps/60aaef355f79500001032f71", "countryCode": "FR", "shortName": "ISGFR" }, { "mapName": "IntersectionGuessr - Greece", "category": "Country", "locationCount": 50000, "link": "https://www.geoguessr.com/maps/60ad7eaeb3760600019472a1", "countryCode": "GR", "shortName": "ISGGR" }, { "mapName": "IntersectionGuessr - Indonesia", "category": "Country", "locationCount": 103867, "link": "https://www.geoguessr.com/maps/60cbc09a00ea7b000151849f", "countryCode": "ID", "shortName": "ISGID" }, { "mapName": "IntersectionGuessr - Italy", "category": "Country", "locationCount": 100000, "link": "https://www.geoguessr.com/maps/60ac3a0243e0670001f548d2", "countryCode": "IT", "shortName": "ISGIT" }, { "mapName": "IntersectionGuessr - Japan", "category": "Country", "locationCount": 100000, "link": "https://www.geoguessr.com/maps/6116c51c5e6d8d00011bcd7d", "countryCode": "JP", "shortName": "ISGJP" }, { "mapName": "IntersectionGuessr - Mexico", "category": "Country", "locationCount": 100000, "link": "https://www.geoguessr.com/maps/60b688467398830001d3a7bb", "countryCode": "MX", "shortName": "ISGMX" }, { "mapName": "IntersectionGuessr - Netherlands", "category": "Country", "locationCount": 49396, "link": "https://www.geoguessr.com/maps/60ca31bfcdf6930001c822c3", "countryCode": "NL", "shortName": "ISGNL" }, { "mapName": "IntersectionGuessr - New Zealand", "category": "Country", "locationCount": 29826, "link": "https://www.geoguessr.com/maps/61489ff67b19390001c3ed7e", "countryCode": "NZ", "shortName": "ISGNZ" }, { "mapName": "IntersectionGuessr - Norway", "category": "Country", "locationCount": 19388, "link": "https://www.geoguessr.com/maps/60ac2b271088a0000155d22f", "countryCode": "NO", "shortName": "ISGNO" }, { "mapName": "IntersectionGuessr - Peru", "category": "Country", "locationCount": 15254, "link": "https://www.geoguessr.com/maps/612d441afdad0000010145c6", "countryCode": "PE", "shortName": "ISGPE" }, { "mapName": "IntersectionGuessr - Poland", "category": "Country", "locationCount": 98527, "link": "https://www.geoguessr.com/maps/60ca23bd00ea7b000151248b", "countryCode": "PL", "shortName": "ISGPL" }, { "mapName": "IntersectionGuessr - Portugal", "category": "Country", "locationCount": 26679, "link": "https://www.geoguessr.com/maps/60ac27a32e13c40001e2758c", "countryCode": "PT", "shortName": "ISGPT" }, { "mapName": "IntersectionGuessr - Russia", "category": "Country", "locationCount": 49992, "link": "https://www.geoguessr.com/maps/60bfd64dc61e8200015bdf5e", "countryCode": "RU", "shortName": "ISGRU" }, { "mapName": "IntersectionGuessr - Singapore", "category": "Country", "locationCount": 4000, "link": "https://www.geoguessr.com/maps/614776d87b19390001c3bc3e", "countryCode": "SG", "shortName": "ISGSG" }, { "mapName": "IntersectionGuessr - South Africa", "category": "Country", "locationCount": 20114, "link": "https://www.geoguessr.com/maps/612d3894284e3100011ec5af", "countryCode": "ZA", "shortName": "ISGZA" }, { "mapName": "IntersectionGuessr - South Korea", "category": "Country", "locationCount": 10191, "link": "https://www.geoguessr.com/maps/6116af5212eb690001140bc4", "countryCode": "KR", "shortName": "ISGKR" }, { "mapName": "IntersectionGuessr - Spain", "category": "Country", "locationCount": 100000, "link": "https://www.geoguessr.com/maps/60b3d59f7398830001d2f105", "countryCode": "ES", "shortName": "ISGES" }, { "mapName": "IntersectionGuessr - Sweden", "category": "Country", "locationCount": 20270, "link": "https://www.geoguessr.com/maps/61478f01e8256b0001683532", "countryCode": "SE", "shortName": "ISGSE" }, { "mapName": "IntersectionGuessr - Switzerland", "category": "Country", "locationCount": 19971, "link": "https://www.geoguessr.com/maps/612cf0736033f40001dea3b8", "countryCode": "CH", "shortName": "ISGCH" }, { "mapName": "IntersectionGuessr - Ukraine", "category": "Country", "locationCount": 20112, "link": "https://www.geoguessr.com/maps/61474f073dad74000129a10d", "countryCode": "UA", "shortName": "ISGUA" }, { "mapName": "IntersectionGuessr - United Kingdom", "category": "Country", "locationCount": 99260, "link": "https://www.geoguessr.com/maps/60cbb0f53e30850001f34244", "countryCode": "GB", "shortName": "ISGGB" }, { "mapName": "IntersectionGuessr - United States", "category": null, "locationCount": 100987, "link": "https://www.geoguessr.com/maps/60bd59efd7828200013e9927", "countryCode": null, "shortName": null }, { "mapName": "Debugging", "category": null, "locationCount": 5, "link": "https://www.geoguessr.com/maps/61041b8a6a94d70001476a75", "countryCode": null, "shortName": null }, { "mapName": "Norway Balanced by Fylke", "category": null, "locationCount": 91409, "link": "https://www.geoguessr.com/maps/6082e3b48a91df000111a1a1", "countryCode": null, "shortName": null }, { "mapName": "Poland - Norway \uD83E\uDD1D", "category": "Country", "locationCount": 24816, "link": "https://www.geoguessr.com/maps/639ca5c7953dab266459d9fb", "countryCode": "NO", "shortName": null }, { "mapName": "RailwayGuessr - United States", "category": null, "locationCount": 20558, "link": "https://www.geoguessr.com/maps/613a53e0bf2ef200016fdf71", "countryCode": null, "shortName": null }, { "mapName": "Sweden Balanced by L\u00E4n", "category": null, "locationCount": 5158, "link": "https://www.geoguessr.com/maps/6082e539055bac0001a2fc19", "countryCode": null, "shortName": null }, { "mapName": "United States Bridges", "category": null, "locationCount": 2132, "link": "https://www.geoguessr.com/maps/607820ad39fc6400012b4f34", "countryCode": null, "shortName": null }]
-
-      ;
-
-    for (const map of jsonData) {
-      if (!map.tags) continue;
-      map.tags.sort((a, b) => a.localeCompare(b));
-    }
-
-    let maps = jsonData.slice();
-    let selectedCol = 'mapName';
-    let selectedSortDir = 'asc';
-
-    function displayMaps(col, sort_dir) {
-      selectedCol = col;
-      selectedSortDir = sort_dir;
-
-      maps.sort((a, b) => {
-        a = a[col];
-        b = b[col];
-
-        if (typeof a === 'string' || typeof b === 'string') {
-          if (sort_dir === 'desc') {
-            return `${b}`.localeCompare(a);
-          }
-          return `${a}`.localeCompare(b);
-        }
-
-        return sort_dir === 'desc' ? b - a : a - b;
-      });
-
-      let html = ``;
-
-      for (const map of maps) {
-        html += `<tr>`;
-
-        html += `<td><a href="${map.link}" target="_blank">${map.mapName}</a></td>`;
-        html += `<td>${map.locationCount.toLocaleString()}</td>`;
-        html += `<td>${map.category}</td>`;
-
-        html += `<td><div class="tags">`;
-
-        if (map.tags) {
-          for (const tag of map.tags) {
-            html += `<span class="tag">${tag}</span>`;
-          }
-        } else {
-          html += `&nbsp;`
-        }
-
-        html += `</div></td>`;
-
-        html += `</tr>`;
+    const start = async () => {
+      const response = await fetch(`https://raw.githubusercontent.com/slashpeekbot/slashpeekbot.github.io/main/maps/maps.json?abb=${Date.now()}`, { cache: "no-cache" });
+      const jsonData = await response.json();
+      for (const map of jsonData) {
+        if (!map.tags) continue;
+        map.tags.sort((a, b) => a.localeCompare(b));
       }
 
-      document.querySelector('#maps tbody').innerHTML = html;
+      let maps = jsonData.slice();
+      let selectedCol = 'mapName';
+      let selectedSortDir = 'asc';
 
-      document.getElementById('maps').classList.toggle('is-hidden', maps.length === 0);
-      document.getElementById('no-results').classList.toggle('is-hidden', maps.length > 0);
+      function displayMaps(col, sort_dir) {
+        selectedCol = col;
+        selectedSortDir = sort_dir;
 
-      for (const th of document.querySelectorAll('#maps th[data-sortable]')) {
-        if (th.dataset.col === col) {
-          th.dataset.sortDir = sort_dir;
-        } else {
-          th.dataset.sortDir = undefined;
-        }
-      }
-    }
+        maps.sort((a, b) => {
+          a = a[col];
+          b = b[col];
 
-    function filterList() {
-      const searchVal = document.getElementById('search').value.toLowerCase().trim();
-      const shouldSearch = (!!searchVal && searchVal.length > 0);
-
-      document.getElementById('clear-search').classList.toggle('is-hidden', searchVal.length === 0);
-
-      const filterList = {
-        locations: document.getElementById('filter-locs').value,
-        category: document.getElementById('filter-category').value,
-        tag: document.getElementById('filter-tag').value,
-      }
-
-      maps = jsonData.filter(map => {
-        // location count filter
-        switch (filterList.locations) {
-          case '5k': if (map.locationCount < 5e3) return false; break;
-          case '10k': if (map.locationCount < 10e3) return false; break;
-          case '25k': if (map.locationCount < 25e3) return false; break;
-          case '50k': if (map.locationCount < 50e3) return false; break;
-          case '75k': if (map.locationCount < 75e3) return false; break;
-          case '100k': if (map.locationCount < 100e3) return false; break;
-        }
-
-        // category filter
-        if (filterList.category && filterList.category.length > 0) {
-          if (map.category !== filterList.category) return false;
-        }
-
-        // tag filter
-        if (filterList.tag && filterList.tag.length > 0) {
-          if (!map.tags || !map.tags.includes(filterList.tag)) return false;
-        }
-
-        // search query
-        if (shouldSearch) {
-          const terms = searchVal.split(' ');
-          let matched = 0;
-
-          termSearch: for (let term of terms) {
-            term = term.trim();
-            if (term.length === 0) continue;
-
-            for (const col of ['mapName', 'country', 'countryCode']) {
-              if (typeof map[col] !== 'string') continue;
-
-              if (map[col].toLowerCase().includes(term)) {
-                matched++;
-                continue termSearch;
-              }
+          if (typeof a === 'string' || typeof b === 'string') {
+            if (sort_dir === 'desc') {
+              return `${b}`.localeCompare(a);
             }
+            return `${a}`.localeCompare(b);
+          }
 
-            if (map.tags) {
-              for (const tag of map.tags) {
-                if (tag.toLowerCase().includes(term)) {
+          return sort_dir === 'desc' ? b - a : a - b;
+        });
+
+        let html = ``;
+
+        const distributionText = map => {
+          const countryDistribution = (map.countryDistribution || []).map(x => `${x.code}: ${x.count}`).join("\n");
+          const subdivisionDistribution = (map.subdivisionDistribution || []).map(x => `${x.code}: ${x.count}`).join("\n");
+
+          return `${countryDistribution}
+
+${subdivisionDistribution}`.trim();
+        }
+
+        for (const map of maps) {
+          html += `<tr>`;
+
+          html += `<td><span class="fa fa-copy copy-distribution" title="Copy distribution as text" data-info="${distributionText(map)}" onclick="navigator.clipboard.writeText(this.getAttribute('data-info'))"></span><a href="https://www.geoguessr.com/maps/${map.mapId}" target="_blank">${map.mapName}</a></td>`;
+          html += `<td>${map.locationCount.toLocaleString()}</td>`;
+          html += `<td>${map.category}</td>`;
+
+          html += `<td><div class="tags">`;
+
+          if (map.tags) {
+            for (const tag of map.tags) {
+              html += `<span class="tag">${tag}</span>`;
+            }
+          } else {
+            html += `&nbsp;`
+          }
+
+          html += `</div></td>`;
+
+          html += `</tr>`;
+        }
+
+        document.querySelector('#maps tbody').innerHTML = html;
+
+        document.getElementById('maps').classList.toggle('is-hidden', maps.length === 0);
+        document.getElementById('no-results').classList.toggle('is-hidden', maps.length > 0);
+
+        for (const th of document.querySelectorAll('#maps th[data-sortable]')) {
+          if (th.dataset.col === col) {
+            th.dataset.sortDir = sort_dir;
+          } else {
+            th.dataset.sortDir = undefined;
+          }
+        }
+      }
+
+      function filterList() {
+        const searchVal = document.getElementById('search').value.toLowerCase().trim();
+        const shouldSearch = (!!searchVal && searchVal.length > 0);
+
+        document.getElementById('clear-search').classList.toggle('is-hidden', searchVal.length === 0);
+
+        const filterList = {
+          locations: document.getElementById('filter-locs').value,
+          category: document.getElementById('filter-category').value,
+          tag: document.getElementById('filter-tag').value,
+        }
+
+        maps = jsonData.filter(map => {
+          // location count filter
+          switch (filterList.locations) {
+            case '5k': if (map.locationCount < 5e3) return false; break;
+            case '10k': if (map.locationCount < 10e3) return false; break;
+            case '25k': if (map.locationCount < 25e3) return false; break;
+            case '50k': if (map.locationCount < 50e3) return false; break;
+            case '75k': if (map.locationCount < 75e3) return false; break;
+            case '100k': if (map.locationCount < 100e3) return false; break;
+          }
+
+          // category filter
+          if (filterList.category && filterList.category.length > 0) {
+            if (map.category !== filterList.category) return false;
+          }
+
+          // tag filter
+          if (filterList.tag && filterList.tag.length > 0) {
+            if (!map.tags || !map.tags.includes(filterList.tag)) return false;
+          }
+
+          // search query
+          if (shouldSearch) {
+            const terms = searchVal.split(' ');
+            let matched = 0;
+
+            termSearch: for (let term of terms) {
+              term = term.trim().toLowerCase();
+              if (term.length === 0) continue;
+
+              for (const col of ['mapName', 'country', 'countryCodes']) {
+                if (Array.isArray(map[col])) {
+                  if (map[col].some(c => c.toLowerCase() === term)) {
+                    matched++;
+                    continue termSearch;
+                  }
+                }
+                if (typeof map[col] !== 'string') continue;
+
+                if (map[col].toLowerCase().includes(term)) {
                   matched++;
                   continue termSearch;
                 }
               }
+
+              if (map.tags) {
+                for (const tag of map.tags) {
+                  if (tag.toLowerCase().includes(term)) {
+                    matched++;
+                    continue termSearch;
+                  }
+                }
+              }
             }
+
+            return matched == terms.length;
           }
 
-          return matched == terms.length;
+          return true;
+        });
+
+        displayMaps(selectedCol, selectedSortDir);
+      }
+
+      function clearSearch() {
+        document.getElementById('search').value = '';
+        filterList();
+      }
+
+      function clickedSortableCol(e) {
+        e.preventDefault();
+
+        const col = e.target.dataset.col;
+        const dir = e.target.dataset.sortDir === 'asc' ? 'desc' : 'asc';
+
+        displayMaps(col, dir);
+      }
+
+      function getTags() {
+        const tagSet = new Set();
+        for (const map of maps) {
+          if (!map.tags) continue;
+
+          for (const tag of map.tags) {
+            tagSet.add(tag);
+          }
         }
 
-        return true;
-      });
+        const tagList = Array.from(tagSet).sort((a, b) => a.localeCompare(b));
 
-      displayMaps(selectedCol, selectedSortDir);
-    }
-
-    function clearSearch() {
-      document.getElementById('search').value = '';
-      filterList();
-    }
-
-    function clickedSortableCol(e) {
-      e.preventDefault();
-
-      const col = e.target.dataset.col;
-      const dir = e.target.dataset.sortDir === 'asc' ? 'desc' : 'asc';
-
-      displayMaps(col, dir);
-    }
-
-    function getTags() {
-      const tagSet = new Set();
-      for (const map of maps) {
-        if (!map.tags) continue;
-
-        for (const tag of map.tags) {
-          tagSet.add(tag);
+        const tagSelect = document.getElementById('filter-tag');
+        for (const tag of tagList) {
+          tagSelect.innerHTML += `<option value="${tag}">${tag}</option>`;
         }
       }
 
-      const tagList = Array.from(tagSet).sort((a, b) => a.localeCompare(b));
+      function reset() {
+        maps = jsonData.slice();
 
-      const tagSelect = document.getElementById('filter-tag');
-      for (const tag of tagList) {
-        tagSelect.innerHTML += `<option value="${tag}">${tag}</option>`;
-      }
-    }
+        document.getElementById('search').value = '';
+        document.getElementById('clear-search').classList.add('is-hidden');
 
-    function reset() {
-      maps = jsonData.slice();
+        document.getElementById('filter-locs').value = '';
+        document.getElementById('filter-category').value = '';
+        document.getElementById('filter-tag').value = '';
 
-      document.getElementById('search').value = '';
-      document.getElementById('clear-search').classList.add('is-hidden');
-
-      document.getElementById('filter-locs').value = '';
-      document.getElementById('filter-category').value = '';
-      document.getElementById('filter-tag').value = '';
-
-      displayMaps(selectedCol, selectedSortDir);
-    }
-
-    function init() {
-      for (const th of document.querySelectorAll('#maps th[data-sortable]')) {
-        th.addEventListener('click', clickedSortableCol);
+        displayMaps(selectedCol, selectedSortDir);
       }
 
-      document.getElementById('reset').addEventListener('click', reset);
+      function init() {
+        for (const th of document.querySelectorAll('#maps th[data-sortable]')) {
+          th.addEventListener('click', clickedSortableCol);
+        }
 
-      displayMaps(selectedCol, selectedSortDir);
+        document.getElementById('reset').addEventListener('click', reset);
 
-      getTags();
+        displayMaps(selectedCol, selectedSortDir);
 
-      document.getElementById('search').addEventListener('change', filterList);
-      document.getElementById('search').addEventListener('keyup', filterList);
-      document.getElementById('filter-locs').addEventListener('change', filterList);
-      document.getElementById('filter-category').addEventListener('change', filterList);
-      document.getElementById('filter-tag').addEventListener('change', filterList);
-      document.getElementById('clear-search').addEventListener('click', clearSearch);
+        getTags();
+
+        document.getElementById('search').addEventListener('change', filterList);
+        document.getElementById('search').addEventListener('keyup', filterList);
+        document.getElementById('filter-locs').addEventListener('change', filterList);
+        document.getElementById('filter-category').addEventListener('change', filterList);
+        document.getElementById('filter-tag').addEventListener('change', filterList);
+        document.getElementById('clear-search').addEventListener('click', clearSearch);
+      }
+
+      init();
     }
 
-    init();
+    start();
   </script>
 </body>
 
