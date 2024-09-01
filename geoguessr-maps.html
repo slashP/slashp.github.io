@@ -172,13 +172,6 @@
       background: rgba(255, 255, 255, 0.025);
     }
 
-    .tags {
-      display: flex;
-      gap: 1rem;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
     .tag {
       background: #2d2d2d;
       font-size: 1.3rem;
@@ -196,6 +189,10 @@
     .copy-distribution {
       cursor: pointer;
       padding-right: 10px;
+    }
+
+    .right-align {
+      text-align: right;
     }
   </style>
 </head>
@@ -265,9 +262,10 @@
           <thead>
             <tr>
               <th data-col="mapName" data-sortable>Map Name</th>
-              <th data-col="locationCount" data-sortable>Locations</th>
+              <th data-col="locationCount" data-sortable class="right-align">Locations</th>
               <th data-col="category" data-sortable>Category</th>
-              <th data-col="tags">Tags</th>
+              <th data-col="likes" data-sortable class="right-align">Likes</th class="right-align">
+              <th data-col="plays" data-sortable class="right-align">Plays</th>
             </tr>
           </thead>
           <tbody></tbody>
@@ -283,14 +281,10 @@
     const start = async () => {
       const response = await fetch(`https://raw.githubusercontent.com/slashpeekbot/slashpeekbot.github.io/main/maps/maps.json?abb=${Date.now()}`, { cache: "no-cache" });
       const jsonData = await response.json();
-      for (const map of jsonData) {
-        if (!map.tags) continue;
-        map.tags.sort((a, b) => a.localeCompare(b));
-      }
 
       let maps = jsonData.slice();
-      let selectedCol = 'mapName';
-      let selectedSortDir = 'asc';
+      let selectedCol = 'plays';
+      let selectedSortDir = 'desc';
 
       function displayMaps(col, sort_dir) {
         selectedCol = col;
@@ -325,19 +319,10 @@ ${subdivisionDistribution}`.trim();
           html += `<tr>`;
 
           html += `<td><span class="fa fa-copy copy-distribution" title="Copy distribution as text" data-info="${distributionText(map)}" onclick="navigator.clipboard.writeText(this.getAttribute('data-info'))"></span><a href="https://www.geoguessr.com/maps/${map.mapId}" target="_blank">${map.mapName}</a></td>`;
-          html += `<td>${map.locationCount.toLocaleString()}</td>`;
+          html += `<td class="right-align">${map.locationCount.toLocaleString()}</td>`;
           html += `<td>${map.category}</td>`;
-
-          html += `<td><div class="tags">`;
-
-          if (map.tags) {
-            for (const tag of map.tags) {
-              html += `<span class="tag">${tag}</span>`;
-            }
-          } else {
-            html += `&nbsp;`
-          }
-
+          html += `<td class="right-align">${map.likes.toLocaleString()}</td>`;
+          html += `<td class="right-align">${map.plays.toLocaleString()}</td>`;
           html += `</div></td>`;
 
           html += `</tr>`;
@@ -385,11 +370,6 @@ ${subdivisionDistribution}`.trim();
             if (map.category !== filterList.category) return false;
           }
 
-          // tag filter
-          if (filterList.tag && filterList.tag.length > 0) {
-            if (!map.tags || !map.tags.includes(filterList.tag)) return false;
-          }
-
           // search query
           if (shouldSearch) {
             const terms = searchVal.split(' ');
@@ -411,15 +391,6 @@ ${subdivisionDistribution}`.trim();
                 if (map[col].toLowerCase().includes(term)) {
                   matched++;
                   continue termSearch;
-                }
-              }
-
-              if (map.tags) {
-                for (const tag of map.tags) {
-                  if (tag.toLowerCase().includes(term)) {
-                    matched++;
-                    continue termSearch;
-                  }
                 }
               }
             }
@@ -447,24 +418,6 @@ ${subdivisionDistribution}`.trim();
         displayMaps(col, dir);
       }
 
-      function getTags() {
-        const tagSet = new Set();
-        for (const map of maps) {
-          if (!map.tags) continue;
-
-          for (const tag of map.tags) {
-            tagSet.add(tag);
-          }
-        }
-
-        const tagList = Array.from(tagSet).sort((a, b) => a.localeCompare(b));
-
-        const tagSelect = document.getElementById('filter-tag');
-        for (const tag of tagList) {
-          tagSelect.innerHTML += `<option value="${tag}">${tag}</option>`;
-        }
-      }
-
       function reset() {
         maps = jsonData.slice();
 
@@ -486,8 +439,6 @@ ${subdivisionDistribution}`.trim();
         document.getElementById('reset').addEventListener('click', reset);
 
         displayMaps(selectedCol, selectedSortDir);
-
-        getTags();
 
         document.getElementById('search').addEventListener('change', filterList);
         document.getElementById('search').addEventListener('keyup', filterList);
