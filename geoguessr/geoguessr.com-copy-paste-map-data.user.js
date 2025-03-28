@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Copy/paste Geoguessr map data
 // @namespace    slashP
-// @version      2.4.1
+// @version      2.4.2
 // @description  Copy latitude, longitude, heading, pitch and zoom information from Geoguessr maps as JSON data. Add or replace locations in maps by pasting JSON data or Google Maps link(s) in map maker.
 // @author       slashP
 // @require https://greasyfork.org/scripts/460322-geoguessr-styles-scan/code/Geoguessr%20Styles%20Scan.js?version=1151668
@@ -40,12 +40,8 @@
     return fetch(url)
       .then(response => response.json())
       .then(map => ({
-        id: map.id,
-        name: map.name,
-        description: map.description,
-        avatar: map.avatar,
-        highlighted: map.highlighted,
-        published: map.published,
+        ...map,
+        coordinates: null,
         customCoordinates: map.coordinates
       }));
   }
@@ -69,7 +65,7 @@
     var except = arr1.map(selector).filter(x => !setB.has(x));
     return except.length;
   }
-  const latLngSelector = x => `${x.lat},${x.lng}`;
+  const latLngSelector = x => `${x.lat},${x.lng},${x.panoId}`;
   const latLngHeadingPitchSelector = x => `${x.lat},${x.lng},${x.heading},${x.pitch}`;
   const pluralize = (text, count) => count === 1 ? text : text + "s";
 
@@ -197,7 +193,7 @@
             return;
           }
 
-          const maximumNumberOfLocations = 105000;
+          const maximumNumberOfLocations = 111000;
           if (numberOfUniqueLocationsImported > maximumNumberOfLocations) {
             setImportLocationsFeedbackText(`You can't import more than ${maximumNumberOfLocations} locations.`);
             return;
@@ -236,7 +232,8 @@
     const uniqueLocations = uniqueBy([...existingMap.customCoordinates, ...locations], latLngSelector);
     const newMap = {
       ...existingMap,
-      customCoordinates: uniqueLocations
+      customCoordinates: uniqueLocations,
+      version: (existingMap.version || 0) + 1
     };
     updateMap(newMap, setAddLocationsFeedbackText);
   }
@@ -250,7 +247,8 @@
     const uniqueLocations = uniqueBy(locations, latLngSelector);
     const newMap = {
       ...existingMap,
-      customCoordinates: uniqueLocations
+      customCoordinates: uniqueLocations,
+      version: (existingMap.version || 0) + 1
     };
     updateMap(newMap, setReplaceLocationsFeedbackText);
   }
