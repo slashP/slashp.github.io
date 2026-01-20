@@ -2,17 +2,33 @@
 <html lang="en">
 
 <head>
-  <title>GeoGuessr Map Directory</title>
+  <title>slashP map directory</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <script src="https://kit.fontawesome.com/57c017c42a.js" crossorigin="anonymous"></script>
   <style>
-    *,
-    *:before,
-    *:after {
+    :root {
+      --bg-primary: #111318;
+      --bg-secondary: #171a21;
+      --bg-tertiary: #1c1f26;
+      --bg-hover: #22262e;
+      --border: #2e3238;
+      --border-subtle: #232629;
+      --text-primary: #ededed;
+      --text-secondary: #8f8f8f;
+      --text-muted: #5f5f5f;
+      --accent: #3ecf8e;
+      --accent-dim: #34b27b;
+      --accent-subtle: rgba(62, 207, 142, 0.1);
+      --success: #3ecf8e;
+      --mono: 'JetBrains Mono', monospace;
+      --sans: 'Inter', -apple-system, sans-serif;
+    }
+
+    * {
       box-sizing: border-box;
     }
 
@@ -24,17 +40,18 @@
     body {
       margin: 0;
       height: 100%;
-      font-size: 1.4rem;
+      font-size: 1.3rem;
       overflow: hidden;
-      background-color: #181818;
-      color: #c0c0c0;
-      font-family: 'Roboto', sans-serif;
-      font-weight: 300;
-      line-height: 1.4;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: var(--sans);
+      font-weight: 400;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
     }
 
     a {
-      color: #fecd19;
+      color: var(--accent);
       text-decoration: none;
     }
 
@@ -44,22 +61,37 @@
 
     input,
     select {
-      background: #0d0d0d;
-      color: #fff;
-      font: inherit;
-      border: none;
-      padding: 1rem 1.4rem;
-      border-radius: 0.4rem;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: var(--sans);
+      font-size: 1.3rem;
+      border: 1px solid var(--border);
+      padding: 0.8rem 1.2rem;
+      border-radius: 4px;
+      transition: border-color 0.15s ease;
+    }
+
+    input:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    input::placeholder {
+      color: var(--text-muted);
+    }
+
+    select {
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'%3E%3Cpath fill='%23888' d='M5 7L1 3h8z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+      padding-right: 3rem;
     }
 
     .is-hidden {
       display: none !important;
-    }
-
-    .wrapper {
-      padding: 1.5rem 2rem;
-      max-width: 160rem;
-      margin: 0 auto;
     }
 
     .layout {
@@ -69,254 +101,528 @@
       flex-direction: column;
     }
 
-    .filters {
+    /* Header */
+    .header {
       flex: 0 0 auto;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 1.6rem 2.4rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+    }
+
+    .title {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .title h1 {
+      margin: 0;
+      font-size: 1.4rem;
+      font-weight: 600;
+      font-family: var(--mono);
+      color: var(--text-primary);
+    }
+
+    .title-icon {
+      color: var(--accent);
+      font-size: 1.6rem;
     }
 
     .credits {
-      font-size: 12px;
-      width: 95px;
+      font-size: 1.1rem;
+      color: var(--text-muted);
     }
 
-    .filters .wrapper {
+    /* Filters */
+    .filters {
+      flex: 0 0 auto;
+      padding: 1.6rem 2.4rem;
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border);
       display: flex;
       flex-wrap: wrap;
-      gap: 4rem;
+      gap: 2rem;
       align-items: flex-end;
+    }
+
+    .filter {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
     }
 
     .filter-search {
       flex: 1;
+      min-width: 240px;
     }
 
-    .field {
-      margin-top: 0.5rem;
+    .filter label {
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .search-wrapper {
       position: relative;
     }
 
     .search-input {
-      min-width: 20rem;
-      display: block;
       width: 100%;
-      padding-right: 3.5rem;
-    }
-
-    .search-input:focus {
-      outline: 1px solid rgba(255, 255, 255, 0.25);
+      padding-right: 3.2rem;
     }
 
     .clear-search {
       position: absolute;
-      top: 0.6rem;
+      top: 50%;
+      transform: translateY(-50%);
       right: 1rem;
-      font-size: 2.2rem;
-      opacity: 0.25;
+      font-size: 1.2rem;
+      color: var(--text-muted);
       cursor: pointer;
+      transition: color 0.15s ease;
     }
 
     .clear-search:hover {
-      opacity: 0.5;
+      color: var(--text-primary);
     }
 
+    /* Table */
     .maps {
       flex: 1;
       overflow: auto;
     }
 
+    .maps::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    .maps::-webkit-scrollbar-track {
+      background: var(--bg-primary);
+    }
+
+    .maps::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 4px;
+    }
+
+    .maps::-webkit-scrollbar-thumb:hover {
+      background: var(--text-muted);
+    }
+
+    .table-container {
+      padding: 0 2.4rem 2.4rem;
+    }
+
     table {
       width: 100%;
+      border-collapse: collapse;
     }
 
     th,
     td {
-      padding: 0.8rem 1.2rem;
-      vertical-align: middle;
+      padding: 1rem 1.2rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-subtle);
     }
 
     th {
-      text-align: left;
+      position: sticky;
+      top: 0;
+      background: var(--bg-primary);
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
       cursor: default;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      position: relative;
+      user-select: none;
+      white-space: nowrap;
     }
 
-    th,
-    label {
-      font-weight: 500;
-      text-transform: uppercase;
-      font-size: 1.3rem;
-      color: #696969;
+    th[data-sortable] {
+      cursor: pointer;
+      transition: color 0.15s ease;
     }
 
     th[data-sortable]:hover {
-      color: #898989;
+      color: var(--text-primary);
     }
 
-    th[data-sortable]:after {
-      font-family: 'Font Awesome 6 Free';
-      font-weight: 900;
-      position: absolute;
-      margin-left: 0.5rem;
+    th[data-sortable]::after {
+      content: '';
+      display: inline-block;
+      margin-left: 0.6rem;
+      opacity: 0.3;
     }
 
-    th[data-sort-dir="asc"]:after {
-      content: '\f0d8';
+    th[data-sort-dir="asc"]::after {
+      content: '\2191';
+      opacity: 1;
+      color: var(--accent);
     }
 
-    th[data-sort-dir="desc"]:after {
-      content: '\f0d7';
+    th[data-sort-dir="desc"]::after {
+      content: '\2193';
+      opacity: 1;
+      color: var(--accent);
     }
 
-    tbody tr:nth-child(2n) td {
-      background: rgba(255, 255, 255, 0.025);
+    tbody tr {
+      transition: background 0.1s ease;
+    }
+
+    tbody tr:hover {
+      background: var(--bg-hover);
+    }
+
+    td {
+      font-family: var(--mono);
+      font-size: 1.2rem;
+    }
+
+    td a {
+      font-family: var(--sans);
+      font-size: 1.3rem;
+      color: #fff;
+    }
+
+    td a:hover {
+      color: var(--accent);
+    }
+
+    .cell-icon {
+      cursor: pointer;
+      color: var(--text-muted);
+      margin-right: 0.8rem;
+      transition: all 0.15s ease;
+    }
+
+    .cell-icon:hover {
+      color: var(--accent);
+    }
+
+    .dist-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.6rem;
+      height: 2.6rem;
+      margin-right: 1rem;
+      background: var(--accent-subtle);
+      border: 1px solid var(--accent);
+      border-radius: 4px;
+      color: var(--accent);
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .dist-btn:hover {
+      background: var(--accent);
+      color: var(--bg-primary);
     }
 
     .tag {
-      background: #2d2d2d;
-      font-size: 1.3rem;
-      padding: 0.3rem 0.6rem;
-      border-radius: 0.4rem;
-    }
-
-    .no-results {
-      padding: 2rem;
-      text-align: center;
-      color: #696969;
-      font-weight: 500;
-    }
-
-    .copy-distribution {
-      cursor: pointer;
-      padding-right: 10px;
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      font-size: 1.1rem;
+      font-family: var(--mono);
+      background: var(--accent-subtle);
+      border: 1px solid var(--accent-dim);
+      border-radius: 3px;
+      color: var(--accent);
     }
 
     .right-align {
       text-align: right;
     }
 
+
+    #maps tfoot {
+      border-top: 2px solid var(--border);
+    }
+
+    #maps tfoot td {
+      padding-top: 1.2rem;
+      color: var(--text-primary);
+      background: var(--bg-secondary);
+      position: sticky;
+      bottom: 0;
+    }
+
+
+    .no-results {
+      padding: 4rem 2rem;
+      text-align: center;
+      color: var(--text-muted);
+    }
+
+    .no-results a {
+      margin-left: 0.4rem;
+    }
+
+    /* Dialog */
     ::backdrop {
-      background-image: linear-gradient(45deg,
-          black,
-          #2d2d2d);
-      opacity: 0.75;
+      background: rgba(0, 0, 0, 0.8);
     }
 
     dialog {
-      background-color: #aaa;
-      border: none;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 6px;
       padding: 0;
+      max-width: 600px;
+      width: 90%;
+      color: var(--text-primary);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
     }
 
-    .active-map-distribution-map-name {
-      font-weight: 400;
-      font-size: 18px;
-      padding: 10px;
+    .dialog-header {
+      padding: 1.6rem 2rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
     }
 
-    #dialog-div {
-      padding: 16px;
+    .dialog-header h2 {
+      margin: 0;
+      font-size: 1.4rem;
+      font-weight: 500;
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .dialog-header .cell-icon {
+      margin: 0;
+      font-size: 1.4rem;
+    }
+
+    .dialog-body {
+      padding: 1.6rem 2rem;
+      max-height: 50vh;
+      overflow-y: auto;
+    }
+
+    .dialog-body::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .dialog-body::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .dialog-body::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 3px;
+    }
+
+    #map-distribution th {
+      position: static;
+      background: transparent;
+    }
+
+    #map-distribution th[data-sortable] {
+      cursor: pointer;
+    }
+
+    #map-distribution th[data-sortable]:hover {
+      color: var(--text-primary);
+    }
+
+    #map-distribution td {
+      font-size: 1.2rem;
+    }
+
+    #map-distribution tfoot {
+      border-top: 2px solid var(--border);
+    }
+
+    #map-distribution tfoot td {
+      padding-top: 1.2rem;
+      color: var(--text-primary);
+    }
+
+    .flag-cell {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .flag-img {
+      width: 20px;
+      height: 15px;
+      object-fit: cover;
+      border-radius: 2px;
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.1);
+    }
+
+    .flag-code {
+      font-family: var(--mono);
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+    }
+
+    /* Loading */
+    .loading {
+      padding: 4rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-family: var(--mono);
+      font-size: 1.2rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .header {
+        padding: 1.2rem 1.6rem;
+      }
+
+      .filters {
+        padding: 1.2rem 1.6rem;
+        gap: 1.2rem;
+      }
+
+      .filter-search {
+        min-width: 100%;
+      }
+
+      .table-container {
+        padding: 0 1.6rem 1.6rem;
+      }
+
+      th, td {
+        padding: 0.8rem;
+      }
+
+      .credits {
+        display: none;
+      }
     }
   </style>
 </head>
 
 <body>
   <div class="layout">
-    <div class="filters">
-      <div class="wrapper">
-        <div class="filter filter-search">
-          <label for="search">Filter Maps</label>
-          <div class="field">
-            <input type="text" placeholder="Search..." class="search-input" name="search" id="search" />
-            <div class="clear-search is-hidden" id="clear-search"><i class="fas fa-times"></i></div>
-          </div>
-        </div>
-
-        <div class="filter">
-          <label for="filter-locs">Locations</label>
-          <div class="field">
-            <select name="filter-locs" id="filter-locs">
-              <option value="">Any</option>
-              <option value="5k">5k+</option>
-              <option value="10k">10k+</option>
-              <option value="25k">25k+</option>
-              <option value="50k">50k+</option>
-              <option value="75k">75k+</option>
-              <option value="100k">100k+</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="filter">
-          <label for="filter-category">Category</label>
-          <div class="field">
-            <select name="filter-category" id="filter-category">
-              <option value="">Any</option>
-              <option value="World">World</option>
-              <option value="Continent">Continent</option>
-              <option value="Country">Country</option>
-              <option value="Region">Region</option>
-              <option value="Subdivision">Subdivision</option>
-              <option value="Other">Other</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="filter">
-          <label for="filter-tag">Tag</label>
-          <div class="field">
-            <select name="filter-tag" id="filter-tag">
-              <option value="">Any</option>
-            </select>
-          </div>
-        </div>
-        <div class="filter credits">
-          Credits to <a href="https://miraclewhips.dev" target="_blank">miracle whips</a>
-          for the code powering this page.
-        </div>
+    <div class="header">
+      <div class="title">
+        <i class="fas fa-globe title-icon"></i>
+        <h1>slashP maps</h1>
+      </div>
+      <div class="credits">
       </div>
     </div>
 
+    <div class="filters">
+      <div class="filter filter-search">
+        <label for="search">Search</label>
+        <div class="search-wrapper">
+          <input type="text" placeholder="Filter by name, country, code..." class="search-input" name="search" id="search" />
+          <div class="clear-search is-hidden" id="clear-search"><i class="fas fa-times"></i></div>
+        </div>
+      </div>
+
+      <div class="filter">
+        <label for="filter-locs">Min Locations</label>
+        <select name="filter-locs" id="filter-locs">
+          <option value="">Any</option>
+          <option value="5k">5k+</option>
+          <option value="10k">10k+</option>
+          <option value="25k">25k+</option>
+          <option value="50k">50k+</option>
+          <option value="75k">75k+</option>
+          <option value="100k">100k+</option>
+        </select>
+      </div>
+
+      <div class="filter">
+        <label for="filter-category">Category</label>
+        <select name="filter-category" id="filter-category">
+          <option value="">Any</option>
+          <option value="World">World</option>
+          <option value="Continent">Continent</option>
+          <option value="Country">Country</option>
+          <option value="Region">Region</option>
+          <option value="Subdivision">Subdivision</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+
+    </div>
+
     <dialog>
-      <div id="#dialog-div">
-        <div class="active-map-distribution-map-name">Map name here</div>
+      <div class="dialog-header">
+        <h2 id="dialog-title">Map Distribution</h2>
+        <span class="fa fa-copy cell-icon" id="copy-distribution" title="Copy to clipboard"></span>
+      </div>
+      <div class="dialog-body">
         <table id="map-distribution" cellspacing="0">
           <thead>
             <tr>
-              <th data-col="code">Code</th>
-              <th data-col="name">Name</th>
-              <th data-col="locationCount" class="right-align">Locations</th>
-              <th data-col="percent" class="right-align">%</th class="right-align">
+              <th data-col="code" data-sortable>Code</th>
+              <th data-col="name" data-sortable>Name</th>
+              <th data-col="count" data-sortable class="right-align">Count</th>
+              <th data-col="percent" data-sortable class="right-align">%</th>
             </tr>
           </thead>
           <tbody></tbody>
+          <tfoot>
+            <tr>
+              <td colspan="2"><strong>Total</strong></td>
+              <td class="right-align" id="dist-total-count">—</td>
+              <td class="right-align">100%</td>
+            </tr>
+          </tfoot>
         </table>
       </div>
     </dialog>
 
     <div class="maps">
-      <div class="wrapper">
+      <div class="table-container">
         <table id="maps" cellspacing="0">
           <thead>
             <tr>
-              <th data-col="mapName" data-sortable>Map Name</th>
+              <th data-col="mapName" data-sortable>Name</th>
               <th data-col="locationCount" data-sortable class="right-align">Locations</th>
               <th data-col="category" data-sortable>Category</th>
-              <th data-col="likes" data-sortable class="right-align">Likes</th class="right-align">
+              <th data-col="likes" data-sortable class="right-align">Likes</th>
               <th data-col="plays" data-sortable class="right-align">Plays</th>
             </tr>
           </thead>
           <tbody></tbody>
+          <tfoot>
+            <tr>
+              <td><strong id="maps-total-count">0 maps</strong></td>
+              <td class="right-align" id="maps-total-locs">—</td>
+              <td></td>
+              <td class="right-align" id="maps-total-likes">—</td>
+              <td class="right-align" id="maps-total-plays">—</td>
+            </tr>
+          </tfoot>
         </table>
 
-        <div class="no-results is-hidden" id="no-results">There are no maps that match your search criteria. <a href="#"
-            id="reset">Clear filters?</a></div>
+        <div class="no-results is-hidden" id="no-results">
+          No maps match your filters.<a href="#" id="reset">Reset</a>
+        </div>
       </div>
     </div>
   </div>
 
   <script>
     const dialog = document.querySelector("dialog");
+    let currentMapId = null;
+    let currentDistribution = [];
+    let distSortCol = 'count';
+    let distSortDir = 'desc';
+
     function closeDialog(event) {
       if (!event.target.contains(dialog)) return;
       dialog.close();
@@ -324,111 +630,197 @@
 
     document.addEventListener('click', closeDialog);
 
-
     let maps = [];
-    const distributionText = mapId => {
-      const map = maps.filter(m => m.mapId === mapId)[0];
-      const countryDistribution = (map.countryDistribution || []).map(x => `${x.code}: ${x.count}`).join("\n");
-      const subdivisionDistribution = (map.subdivisionDistribution || []).map(x => `${x.code}: ${x.count}`).join("\n");
 
-      return `${countryDistribution}
+    const getFlagUrl = (code) => {
+      if (!code || code.length < 2) return null;
+      return `https://flagcdn.com/w40/${code.toLowerCase().slice(0, 2)}.png`;
+    };
 
-${subdivisionDistribution}`.trim();
-    }
+    const getDistributionText = mapId => {
+      const map = maps.find(m => m.mapId === mapId);
+      if (!map) return '';
+
+      const countryDist = (map.countryDistribution || [])
+        .map(x => `${x.code}: ${x.count}`)
+        .join("\n");
+      const subdivDist = (map.subdivisionDistribution || [])
+        .map(x => `${x.code}: ${x.count}`)
+        .join("\n");
+
+      return `${countryDist}\n\n${subdivDist}`.trim();
+    };
+
+    const renderDistributionTable = () => {
+      const sorted = [...currentDistribution].sort((a, b) => {
+        let valA = a[distSortCol];
+        let valB = b[distSortCol];
+
+        if (distSortCol === 'percent') {
+          valA = a.count;
+          valB = b.count;
+        }
+
+        if (typeof valA === 'string' || typeof valB === 'string') {
+          return distSortDir === 'desc'
+            ? `${valB || ''}`.localeCompare(valA || '')
+            : `${valA || ''}`.localeCompare(valB || '');
+        }
+
+        return distSortDir === 'desc' ? valB - valA : valA - valB;
+      });
+
+      const total = currentDistribution.reduce((sum, item) => sum + item.count, 0);
+      let html = '';
+
+      for (const item of sorted) {
+        const name = item.name || item.code || '—';
+        const code = item.code || '—';
+        const flagUrl = getFlagUrl(item.code);
+        const pct = total > 0 ? ((item.count / total) * 100).toFixed(3) : '0.000';
+
+        const flagHtml = flagUrl
+          ? `<img src="${flagUrl}" alt="${code}" class="flag-img" onerror="this.style.display='none'">`
+          : '';
+
+        html += `<tr>
+          <td><div class="flag-cell">${flagHtml}<span class="flag-code">${code}</span></div></td>
+          <td>${name}</td>
+          <td class="right-align">${item.count.toLocaleString()}</td>
+          <td class="right-align">${pct}%</td>
+        </tr>`;
+      }
+
+      document.querySelector('#map-distribution tbody').innerHTML = html;
+      document.getElementById('dist-total-count').textContent = total.toLocaleString();
+
+      for (const th of document.querySelectorAll('#map-distribution th[data-sortable]')) {
+        if (th.dataset.col === distSortCol) {
+          th.dataset.sortDir = distSortDir;
+        } else {
+          delete th.dataset.sortDir;
+        }
+      }
+    };
 
     const renderMapDistributionDialog = mapId => {
-      const map = maps.filter(m => m.mapId === mapId)[0];
-      let distributionTableHtml = '';
-      console.log(map)
-      let distribution = (map.countryDistribution || []);
-      if (distribution.length === 0) {
-        distribution = map.subdivisionDistribution || [];
+      const map = maps.find(m => m.mapId === mapId);
+      if (!map) return;
+
+      currentMapId = mapId;
+
+      // Use subdivision if only one country, otherwise use countries
+      let distribution = map.countryDistribution || [];
+      if (distribution.length <= 1 && map.subdivisionDistribution?.length > 0) {
+        distribution = map.subdivisionDistribution;
       }
 
-      const countSum = distribution.reduce((partialSum, a) => partialSum + a.count, 0);
-      for (const line of distribution) {
-        distributionTableHtml += `<tr>`;
-        distributionTableHtml += `<td>${line.code}</td>`;
-        distributionTableHtml += `<td>${line.name}</td>`;
-        distributionTableHtml += `<td class="right-align">${line.count.toLocaleString()}</td>`;
-        distributionTableHtml += `<td class="right-align">${(line.count / countSum * 100).toLocaleString()} %</td>`;
-        distributionTableHtml += `</tr>`;
-      }
-      document.querySelector('dialog tbody').innerHTML = distributionTableHtml;
-      document.querySelector('.active-map-distribution-map-name').innerHTML = `<span class="fa fa-copy copy-distribution" title="Copy distribution as text" data-info="${distributionText(map.mapId)}" onclick="navigator.clipboard.writeText(this.getAttribute('data-info'))"></span> ${map.mapName}`;
+      currentDistribution = distribution;
+      distSortCol = 'count';
+      distSortDir = 'desc';
+
+      renderDistributionTable();
+      document.querySelector('#dialog-title').textContent = map.mapName;
       dialog.showModal();
     };
 
+    const handleDistSort = (e) => {
+      const col = e.target.dataset.col;
+      if (!col) return;
+      distSortDir = (distSortCol === col && distSortDir === 'desc') ? 'asc' : 'desc';
+      distSortCol = col;
+      renderDistributionTable();
+    };
+
+    for (const th of document.querySelectorAll('#map-distribution th[data-sortable]')) {
+      th.addEventListener('click', handleDistSort);
+    }
+
+    document.getElementById('copy-distribution').addEventListener('click', () => {
+      if (currentMapId) {
+        navigator.clipboard.writeText(getDistributionText(currentMapId));
+      }
+    });
+
     const start = async () => {
-      const response = await fetch(`https://raw.githubusercontent.com/slashpeekbot/slashpeekbot.github.io/main/maps/maps.json?abb=${Date.now()}`, { cache: "no-cache" });
+      const response = await fetch(
+        `https://raw.githubusercontent.com/slashpeekbot/slashpeekbot.github.io/main/maps/maps.json?t=${Date.now()}`,
+        { cache: "no-cache" }
+      );
       const jsonData = await response.json();
 
       maps = jsonData.slice();
       let selectedCol = 'plays';
       let selectedSortDir = 'desc';
 
-      function displayMaps(col, sort_dir) {
+      function displayMaps(col, sortDir) {
         selectedCol = col;
-        selectedSortDir = sort_dir;
+        selectedSortDir = sortDir;
 
         maps.sort((a, b) => {
-          a = a[col];
-          b = b[col];
+          const valA = a[col];
+          const valB = b[col];
 
-          if (typeof a === 'string' || typeof b === 'string') {
-            if (sort_dir === 'desc') {
-              return `${b}`.localeCompare(a);
-            }
-            return `${a}`.localeCompare(b);
+          if (typeof valA === 'string' || typeof valB === 'string') {
+            return sortDir === 'desc'
+              ? `${valB}`.localeCompare(valA)
+              : `${valA}`.localeCompare(valB);
           }
 
-          return sort_dir === 'desc' ? b - a : a - b;
+          return sortDir === 'desc' ? valB - valA : valA - valB;
         });
 
-        let html = ``;
+        let html = '';
 
         for (const map of maps) {
-          html += `<tr>`;
-
-          html += `<td><span class="fa fa-circle-info copy-distribution" title="Copy distribution as text" data-info="${map.mapId}" onclick="renderMapDistributionDialog(this.getAttribute('data-info'))"></span><a href="https://www.geoguessr.com/maps/${map.mapId}" target="_blank">${map.mapName}</a></td>`;
-          html += `<td class="right-align">${map.locationCount.toLocaleString()}</td>`;
-          html += `<td>${map.category}</td>`;
-          html += `<td class="right-align">${map.likes.toLocaleString()}</td>`;
-          html += `<td class="right-align">${map.plays.toLocaleString()}</td>`;
-          html += `</div></td>`;
-
-          html += `</tr>`;
+          html += `<tr>
+            <td>
+              <span class="fa fa-chart-pie dist-btn" title="View distribution" data-id="${map.mapId}" onclick="renderMapDistributionDialog(this.dataset.id)"></span>
+              <a href="https://www.geoguessr.com/maps/${map.mapId}" target="_blank">${map.mapName}</a>
+            </td>
+            <td class="right-align">${map.locationCount.toLocaleString()}</td>
+            <td><span class="tag">${map.category}</span></td>
+            <td class="right-align">${map.likes.toLocaleString()}</td>
+            <td class="right-align">${map.plays.toLocaleString()}</td>
+          </tr>`;
         }
 
         document.querySelector('#maps tbody').innerHTML = html;
-
         document.getElementById('maps').classList.toggle('is-hidden', maps.length === 0);
         document.getElementById('no-results').classList.toggle('is-hidden', maps.length > 0);
 
+        // Update totals
+        const totalLocs = maps.reduce((sum, m) => sum + (m.locationCount || 0), 0);
+        const totalLikes = maps.reduce((sum, m) => sum + (m.likes || 0), 0);
+        const totalPlays = maps.reduce((sum, m) => sum + (m.plays || 0), 0);
+
+        document.getElementById('maps-total-count').textContent = `${maps.length.toLocaleString()} maps`;
+        document.getElementById('maps-total-locs').textContent = totalLocs.toLocaleString();
+        document.getElementById('maps-total-likes').textContent = totalLikes.toLocaleString();
+        document.getElementById('maps-total-plays').textContent = totalPlays.toLocaleString();
+
         for (const th of document.querySelectorAll('#maps th[data-sortable]')) {
           if (th.dataset.col === col) {
-            th.dataset.sortDir = sort_dir;
+            th.dataset.sortDir = sortDir;
           } else {
-            th.dataset.sortDir = undefined;
+            delete th.dataset.sortDir;
           }
         }
       }
 
       function filterList() {
         const searchVal = document.getElementById('search').value.toLowerCase().trim();
-        const shouldSearch = (!!searchVal && searchVal.length > 0);
+        const shouldSearch = searchVal.length > 0;
 
-        document.getElementById('clear-search').classList.toggle('is-hidden', searchVal.length === 0);
+        document.getElementById('clear-search').classList.toggle('is-hidden', !shouldSearch);
 
-        const filterList = {
+        const filters = {
           locations: document.getElementById('filter-locs').value,
           category: document.getElementById('filter-category').value,
-          tag: document.getElementById('filter-tag').value,
-        }
+        };
 
         maps = jsonData.filter(map => {
-          // location count filter
-          switch (filterList.locations) {
+          switch (filters.locations) {
             case '5k': if (map.locationCount < 5e3) return false; break;
             case '10k': if (map.locationCount < 10e3) return false; break;
             case '25k': if (map.locationCount < 25e3) return false; break;
@@ -437,37 +829,48 @@ ${subdivisionDistribution}`.trim();
             case '100k': if (map.locationCount < 100e3) return false; break;
           }
 
-          // category filter
-          if (filterList.category && filterList.category.length > 0) {
-            if (map.category !== filterList.category) return false;
+          if (filters.category && map.category !== filters.category) {
+            return false;
           }
 
-          // search query
           if (shouldSearch) {
-            const terms = searchVal.split(' ');
+            const terms = searchVal.split(' ').filter(t => t.length > 0);
             let matched = 0;
 
-            termSearch: for (let term of terms) {
-              term = term.trim().toLowerCase();
-              if (term.length === 0) continue;
+            termLoop: for (const term of terms) {
+              // If term is 2 characters (country code), search in distribution data
+              if (term.length === 2) {
+                // Search in countryCodes array
+                const codes = map.countryCodes || [];
+                if (codes.some(c => c.toLowerCase() === term)) {
+                  matched++;
+                  continue termLoop;
+                }
 
-              for (const col of ['mapName', 'country', 'countryCodes']) {
-                if (Array.isArray(map[col])) {
-                  if (map[col].some(c => c.toLowerCase() === term)) {
+                // Search in country distribution codes
+                const distCountries = map.countryDistribution || [];
+                for (const dist of distCountries) {
+                  if (dist.code && dist.code.toLowerCase() === term) {
                     matched++;
-                    continue termSearch;
+                    continue termLoop;
                   }
                 }
-                if (typeof map[col] !== 'string') continue;
 
-                if (map[col].toLowerCase().includes(term)) {
+                // Also check map name for 2-letter terms
+                if (map.mapName && map.mapName.toLowerCase().includes(term)) {
                   matched++;
-                  continue termSearch;
+                  continue termLoop;
+                }
+              } else {
+                // For longer terms, only search in map name
+                if (map.mapName && map.mapName.toLowerCase().includes(term)) {
+                  matched++;
+                  continue termLoop;
                 }
               }
             }
 
-            return matched == terms.length;
+            return matched === terms.length;
           }
 
           return true;
@@ -481,47 +884,35 @@ ${subdivisionDistribution}`.trim();
         filterList();
       }
 
-      function clickedSortableCol(e) {
+      function handleSort(e) {
         e.preventDefault();
-
         const col = e.target.dataset.col;
         const dir = e.target.dataset.sortDir === 'asc' ? 'desc' : 'asc';
-
         displayMaps(col, dir);
       }
 
       function reset() {
         maps = jsonData.slice();
-
         document.getElementById('search').value = '';
         document.getElementById('clear-search').classList.add('is-hidden');
-
         document.getElementById('filter-locs').value = '';
         document.getElementById('filter-category').value = '';
-        document.getElementById('filter-tag').value = '';
-
         displayMaps(selectedCol, selectedSortDir);
       }
 
-      function init() {
-        for (const th of document.querySelectorAll('#maps th[data-sortable]')) {
-          th.addEventListener('click', clickedSortableCol);
-        }
-
-        document.getElementById('reset').addEventListener('click', reset);
-
-        displayMaps(selectedCol, selectedSortDir);
-
-        document.getElementById('search').addEventListener('change', filterList);
-        document.getElementById('search').addEventListener('keyup', filterList);
-        document.getElementById('filter-locs').addEventListener('change', filterList);
-        document.getElementById('filter-category').addEventListener('change', filterList);
-        document.getElementById('filter-tag').addEventListener('change', filterList);
-        document.getElementById('clear-search').addEventListener('click', clearSearch);
+      // Init
+      for (const th of document.querySelectorAll('#maps th[data-sortable]')) {
+        th.addEventListener('click', handleSort);
       }
 
-      init();
-    }
+      document.getElementById('reset').addEventListener('click', reset);
+      document.getElementById('search').addEventListener('input', filterList);
+      document.getElementById('filter-locs').addEventListener('change', filterList);
+      document.getElementById('filter-category').addEventListener('change', filterList);
+      document.getElementById('clear-search').addEventListener('click', clearSearch);
+
+      displayMaps(selectedCol, selectedSortDir);
+    };
 
     start();
   </script>
